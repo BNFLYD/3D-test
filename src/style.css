@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+:root {
+  --bg-base: #07090e;
+  --bg-elevated: #0d111a;
+  --bg-muted: #121722;
+  --fg-primary: #f2f2f2;
+  --fg-muted: #8a8a8a;
+  --accent: #00f3ff;
+}
+
+@theme inline {
+  --color-bg-base: var(--bg-base);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-bg-muted: var(--bg-muted);
+  --color-fg-primary: var(--fg-primary);
+  --color-fg-muted: var(--fg-muted);
+  --color-accent: var(--accent);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--fg-primary);
+  min-height: 100vh;
+}
+
+::selection {
+  background-color: var(--accent);
+  color: #000000;
+}
