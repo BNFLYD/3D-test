@@ -21,21 +21,20 @@ export default function architectureApp() {
         canvas2dApi: null,
 
         steps: [
-            { id: 1, number: '01', label: '01 Experience Layer', file: 'layer-01-experience.html' },
-            { id: 2, number: '02', label: '02 Application Layer', file: 'layer-02-application.html' },
-            { id: 3, number: '03', label: '03 Domain Layer', file: 'layer-03-domain.html' },
-            { id: 4, number: '04', label: '04 Data Layer', file: 'layer-04-data.html' },
-            { id: 5, number: '05', label: '05 Infrastructure Layer', file: 'layer-05-infrastructure.html' },
-            { id: 6, number: 'SEC', label: 'Security Field (Transversal)', file: 'security-field.html' },
-            { id: 7, number: 'AI', label: 'AI Module (Selective)', file: 'ai-module.html' },
-            { id: 8, number: 'HOD', label: 'Arquitectura Completa', file: 'architecture-complete.html' }
+            { id: 1, number: '01', label: '01 Experience Layer', shortLabel: 'Experience', file: 'layer-01-experience.html' },
+            { id: 2, number: '02', label: '02 Application Layer', shortLabel: 'Application', file: 'layer-02-application.html' },
+            { id: 3, number: '03', label: '03 Domain Layer', shortLabel: 'Domain', file: 'layer-03-domain.html' },
+            { id: 4, number: '04', label: '04 Data Layer', shortLabel: 'Data', file: 'layer-04-data.html' },
+            { id: 5, number: '05', label: '05 Infrastructure Layer', shortLabel: 'Infrastructure', file: 'layer-05-infrastructure.html' },
+            { id: 6, number: 'SEC', label: 'Security Field (Transversal)', shortLabel: 'Security', file: 'security-field.html' },
+            { id: 7, number: 'AI', label: 'AI Module (Selective)', shortLabel: 'AI', file: 'ai-module.html' },
+            { id: 8, number: 'HOD', label: 'Arquitectura Completa', shortLabel: 'Arquitectura', file: 'architecture-complete.html' }
         ],
 
         init() {
             this.$watch('currentStep', (val) => {
                 this.loadStepContent(val);
                 window.dispatchEvent(new CustomEvent('app-step-changed', { detail: { step: val } }));
-                this.updateStepUI();
             });
 
             this.$watch('explodeFactor', (val) => {
@@ -89,21 +88,6 @@ export default function architectureApp() {
             });
 
             this.drawerOpen = step <= 7;
-        },
-
-        updateStepUI() {
-            this.steps.forEach(s => {
-                const btn = document.getElementById(`step-btn-${s.id}`);
-                if (btn) {
-                    if (s.id === this.currentStep) {
-                        btn.classList.add('active');
-                        btn.querySelector('i').classList.replace('text-slate-600', 'text-cyan-400');
-                    } else {
-                        btn.classList.remove('active');
-                        btn.querySelector('i').classList.replace('text-cyan-400', 'text-slate-600');
-                    }
-                }
-            });
         },
 
         togglePlayStory() {

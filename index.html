@@ -201,33 +201,8 @@
             </div>
         </header>
 
-        <!-- Center-Left Floating Storyboard & Controls -->
-        <div class="flex-1 flex justify-between items-center my-4 pointer-events-none">
-
-            <!-- Left Side: Interactive Step Navigator -->
-            <div class="pointer-events-auto flex flex-col gap-2 glass-panel p-3 rounded-2xl max-w-[280px] md:max-w-xs transition-all duration-300">
-                <div class="text-[10px] font-mono tracking-wider text-slate-400 uppercase mb-1 flex items-center justify-between">
-                    <span>Etapas de Despliegue</span>
-                    <span class="text-cyan-400 font-bold" x-text="`${currentStep} / ${steps.length}`"></span>
-                </div>
-
-                <div id="step-list" class="flex flex-col gap-1.5">
-                    <template x-for="step in steps" :key="step.id">
-                        <button :id="`step-btn-${step.id}`" @click="setStep(step.id)" class="glass-btn w-full text-left px-3 py-2 rounded-xl text-xs flex items-center justify-between transition-all" :class="currentStep === step.id ? 'active' : 'text-slate-300'">
-                            <span class="font-medium truncate" x-text="step.label"></span>
-                            <i class="fa-solid fa-chevron-right text-[10px]" :class="currentStep === step.id ? 'text-cyan-400' : 'text-slate-600'"></i>
-                        </button>
-                    </template>
-                </div>
-
-                <div class="mt-2 pt-2 border-t border-white/10 flex items-center justify-between text-xs text-slate-400">
-                    <span class="text-[11px]"><i class="fa-solid fa-mouse text-cyan-400 mr-1"></i> Scroll o Clic</span>
-                    <button @click="togglePlayStory" class="text-xs text-cyan-400 hover:text-cyan-300 font-semibold flex items-center gap-1">
-                        <i class="fa-solid" :class="isAutoStory ? 'fa-pause' : 'fa-play'" style="font-size: 0.625rem;"></i>
-                        <span x-text="isAutoStory ? 'Pausar' : 'Auto-play'"></span>
-                    </button>
-                </div>
-            </div>
+        <!-- Center Area: solo drawer de detalle flotando a la derecha -->
+        <div class="flex-1 flex justify-end items-center my-4 pointer-events-none">
 
             <!-- Right Side: Layer Detail Drawer (Active Node Inspector) -->
             <div id="detail-drawer" x-show="drawerOpen" x-transition class="pointer-events-auto glass-panel p-5 rounded-2xl w-80 md:w-96 transform transition-all duration-500 flex flex-col gap-3">
@@ -256,29 +231,15 @@
             </div>
         </div>
 
-        <!-- Bottom Floating Controls Bar -->
-        <footer class="pointer-events-auto flex flex-col sm:flex-row items-center justify-between gap-3 glass-panel p-3 px-5 rounded-2xl">
-
-            <!-- Exploded View Slider -->
-            <div class="flex items-center gap-3 w-full sm:w-auto">
-                <span class="text-xs font-mono text-slate-300 flex items-center gap-1.5 whitespace-nowrap">
-                    <i class="fa-solid fa-arrows-up-down text-cyan-400"></i> Separe 3D:
-                </span>
-                <input id="slider-explode" type="range" min="0" max="100" x-model.number="explodeFactor" @input="explodeFactor = $event.target.value / 100 * 1.2" class="w-32 sm:w-44 accent-cyan-400">
-                <span class="text-xs font-mono text-cyan-400 w-8" x-text="`${Math.round(explodeFactor / 1.2 * 100)}%`"></span>
-            </div>
-
-            <!-- View Toggles -->
-            <div class="flex items-center gap-2 overflow-x-auto w-full sm:w-auto justify-end">
-                <button @click="showSecurity = !showSecurity" :class="['glass-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 flex items-center gap-2 whitespace-nowrap', showSecurity ? 'active' : '']">
-                    <i class="fa-solid fa-shield-halved text-amber-400"></i> Security Field
-                </button>
-                <button @click="showAI = !showAI" :class="['glass-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 flex items-center gap-2 whitespace-nowrap', showAI ? 'active' : '']">
-                    <i class="fa-solid fa-brain text-pink-400"></i> AI Connections
-                </button>
-                <button @click="showFlow = !showFlow" :class="['glass-btn px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 flex items-center gap-2 whitespace-nowrap', showFlow ? 'active' : '']">
-                    <i class="fa-solid fa-bolt text-cyan-400"></i> Data Flow
-                </button>
+        <!-- Bottom Floating Controls Bar: selector de etapas horizontal -->
+        <footer class="pointer-events-auto glass-panel p-4 px-5 rounded-2xl">
+            <div class="flex items-stretch gap-2 overflow-x-auto" id="step-footer">
+                <template x-for="step in steps" :key="step.id">
+                    <button :id="`step-btn-${step.id}`" @click="setStep(step.id)" :class="currentStep === step.id ? 'active' : ''" class="glass-btn flex-1 min-w-[110px] flex flex-col items-center justify-center gap-1.5 px-4 py-3 rounded-xl transition-all">
+                        <span class="text-[10px] font-mono font-bold tracking-wider" x-text="step.number"></span>
+                        <span class="text-xs font-medium whitespace-nowrap" x-text="step.shortLabel"></span>
+                    </button>
+                </template>
             </div>
         </footer>
     </div>
