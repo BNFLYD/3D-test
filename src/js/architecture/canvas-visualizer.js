@@ -11,8 +11,8 @@ const CYAN = '#00f3ff'
 // Posición de cámara fija — ajustar estos valores para centrar el diagrama
 const FRAME = {
   angleX: 0.55,
-  angleY: -0.78,
-  zoom: 1,
+  angleY: -0.975,  // -0.78 * 1.25 (25% más a la izquierda)
+  zoom: 1.25,      // 1 * 1.25 (25% más de acercamiento)
   panX: 0,
   panY: 0,
 }
