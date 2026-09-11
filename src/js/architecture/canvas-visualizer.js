@@ -8,6 +8,15 @@ import { drawBlock3D, drawCylinder3D, drawConnectionLine, drawSecurityEnvelope, 
 
 const CYAN = '#00f3ff'
 
+// Posición de cámara fija — ajustar estos valores para centrar el diagrama
+const FRAME = {
+  angleX: 0.55,
+  angleY: -0.78,
+  zoom: 1,
+  panX: 0,
+  panY: 0,
+}
+
 // Mapeo de los pasos de Alpine (1-8) a flags de visibilidad acumulativa
 // 1 Experience · 2 Application · 3 Domain · 4 Data · 5 Infrastructure ·
 // 6 Security · 7 AI · 8 Completo
@@ -35,11 +44,11 @@ export function initCanvasVisualizer({ container, canvas }) {
   if (!ctx) return
 
   const engine = {
-    angleX: 0.55,
-    angleY: -0.78,
-    zoom: 1,
-    panX: 0,
-    panY: 0,
+    angleX: FRAME.angleX,
+    angleY: FRAME.angleY,
+    zoom: FRAME.zoom,
+    panX: FRAME.panX,
+    panY: FRAME.panY,
     dragging: false,
     lastX: 0,
     lastY: 0,
@@ -196,63 +205,37 @@ export function initCanvasVisualizer({ container, canvas }) {
     const dx = e.clientX - engine.lastX
     const dy = e.clientY - engine.lastY
     if (e.shiftKey) {
+      // Solo desplazamiento (pan) con shift+drag; rotación y zoom fijos
       engine.panX += dx
       engine.panY += dy
-    } else {
-      engine.angleY += dx * 0.006
-      engine.angleX += dy * 0.006
-      engine.angleX = Math.max(0.15, Math.min(Math.PI / 2.3, engine.angleX))
     }
     engine.lastX = e.clientX
     engine.lastY = e.clientY
   }
-  const onWheel = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    engine.zoom = Math.max(0.4, Math.min(2.2, engine.zoom + e.deltaY * -0.001))
-  }
 
-  // ---- Touch ----
-  let lastTouchDist = 0
+  // La rueda NO hace zoom aquí: se deja propagar a window para navegar etapas
+
+  // ---- Touch (1 dedo = pan; sin pinch-zoom) ----
   const onTouchStart = (e) => {
     if (e.touches.length === 1) {
       engine.dragging = true
       engine.lastX = e.touches[0].clientX
       engine.lastY = e.touches[0].clientY
-    } else if (e.touches.length === 2) {
-      engine.dragging = false
-      const dx = e.touches[0].clientX - e.touches[1].clientX
-      const dy = e.touches[0].clientY - e.touches[1].clientY
-      lastTouchDist = Math.sqrt(dx * dx + dy * dy)
     }
   }
   const onTouchMove = (e) => {
-    e.preventDefault()
     if (e.touches.length === 1 && engine.dragging) {
-      const dx = e.touches[0].clientX - engine.lastX
-      const dy = e.touches[0].clientY - engine.lastY
-      engine.angleY += dx * 0.006
-      engine.angleX += dy * 0.006
-      engine.angleX = Math.max(0.15, Math.min(Math.PI / 2.3, engine.angleX))
+      e.preventDefault()
+      engine.panX += e.touches[0].clientX - engine.lastX
+      engine.panY += e.touches[0].clientY - engine.lastY
       engine.lastX = e.touches[0].clientX
       engine.lastY = e.touches[0].clientY
-    } else if (e.touches.length === 2) {
-      const dx = e.touches[0].clientX - e.touches[1].clientX
-      const dy = e.touches[0].clientY - e.touches[1].clientY
-      const dist = Math.sqrt(dx * dx + dy * dy)
-      if (lastTouchDist > 0) {
-        const scale = dist / lastTouchDist
-        engine.zoom = Math.max(0.4, Math.min(2.2, engine.zoom * scale))
-      }
-      lastTouchDist = dist
     }
   }
   const onTouchEnd = (e) => {
     if (e.touches.length === 0) {
       engine.dragging = false
-      lastTouchDist = 0
     } else if (e.touches.length === 1) {
-      engine.dragging = true
       engine.lastX = e.touches[0].clientX
       engine.lastY = e.touches[0].clientY
     }
@@ -261,7 +244,6 @@ export function initCanvasVisualizer({ container, canvas }) {
   canvas.addEventListener('mousedown', onDown)
   window.addEventListener('mouseup', onUp)
   window.addEventListener('mousemove', onMove)
-  canvas.addEventListener('wheel', onWheel, { passive: false })
   canvas.addEventListener('touchstart', onTouchStart, { passive: true })
   canvas.addEventListener('touchmove', onTouchMove, { passive: false })
   canvas.addEventListener('touchend', onTouchEnd, { passive: true })
@@ -281,20 +263,6 @@ export function initCanvasVisualizer({ container, canvas }) {
 
   // ---- API expuesta ----
   return {
-    setView(mode) {
-      if (mode === 'iso') { engine.angleX = 0.55; engine.angleY = -0.78; engine.panX = 0; engine.panY = 0 }
-      else if (mode === 'front') { engine.angleX = 0.08; engine.angleY = 0; engine.panX = 0; engine.panY = 0 }
-      else if (mode === 'top') { engine.angleX = 1.2; engine.angleY = -0.4; engine.panX = 0; engine.panY = 0 }
-    },
-    reset() {
-      engine.angleX = 0.55
-      engine.angleY = -0.78
-      engine.zoom = 1
-      engine.panX = 0
-      engine.panY = 0
-    },
-    setZoom(z) { engine.zoom = Math.max(0.4, Math.min(2.2, z)) },
-    getZoom() { return engine.zoom },
     setStep(step) { engine.step = step },
     destroy() {
       if (rafId) cancelAnimationFrame(rafId)
@@ -306,7 +274,6 @@ export function initCanvasVisualizer({ container, canvas }) {
       canvas.removeEventListener('mousedown', onDown)
       window.removeEventListener('mouseup', onUp)
       window.removeEventListener('mousemove', onMove)
-      canvas.removeEventListener('wheel', onWheel)
       canvas.removeEventListener('touchstart', onTouchStart)
       canvas.removeEventListener('touchmove', onTouchMove)
       canvas.removeEventListener('touchend', onTouchEnd)

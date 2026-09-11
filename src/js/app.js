@@ -17,7 +17,6 @@ export default function architectureApp() {
         showFlow: true,
         drawerOpen: false,
         viewMode: '3d',
-        canvas2dView: 'iso',
         canvas2dApi: null,
 
         steps: [
