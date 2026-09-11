@@ -1,6 +1,11 @@
 // HOD System Architecture - Alpine.js Application State & HTMX Bridge
 
-function architectureApp() {
+import Alpine from 'alpinejs'
+import htmx from 'htmx.org'
+
+window.htmx = htmx
+
+export default function architectureApp() {
     return {
         currentStep: 1,
         explodeFactor: 0,
@@ -115,4 +120,4 @@ function architectureApp() {
     };
 }
 
-window.architectureApp = architectureApp;
+Alpine.data('architectureApp', architectureApp)

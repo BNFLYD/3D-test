@@ -1,6 +1,10 @@
 // HOD System Architecture - Three.js Scene Module
 // Ported from /presentacion/HOD System Architecture.html
 
+import * as THREE from 'three'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import gsap from 'gsap'
+
 const LAYERS_DATA = [
     {
         id: 'exp',
@@ -91,7 +95,7 @@ let showSecurity = true;
 let showAI = true;
 let showFlow = true;
 
-function initThree() {
+export function initThree() {
     const container = document.getElementById('webgl-container');
     if (!container) return;
 
@@ -112,7 +116,7 @@ function initThree() {
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     container.appendChild(renderer.domElement);
 
-    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.maxPolarAngle = Math.PI / 2 + 0.1;
@@ -709,6 +713,4 @@ function animate() {
     renderer.render(scene, camera);
 }
 
-if (typeof window !== 'undefined') {
-    window.initThree = initThree;
-}
+window.initThree = initThree
