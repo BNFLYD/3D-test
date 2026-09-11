@@ -120,8 +120,43 @@
 </head>
 <body x-data="architectureApp()" x-init="init()" class="h-full w-full bg-[#07090e] text-slate-100 overflow-hidden select-none">
 
-    <!-- 3D Canvas Background -->
-    <div id="webgl-container"></div>
+    <!-- 3D Canvas Background (Three.js) -->
+    <div id="webgl-container" x-show="viewMode === '3d'"></div>
+
+    <!-- 2D Canvas Diagram (Canvas 2D isométrico) -->
+    <div id="canvas2d-container" x-show="viewMode === '2d'" class="absolute inset-0 z-[1]">
+        <canvas id="canvas2d" class="w-full h-full cursor-grab active:cursor-grabbing touch-none"></canvas>
+
+        <!-- Controles de vista 2D -->
+        <div class="absolute top-20 right-4 z-10 flex flex-col gap-2 pointer-events-auto">
+            <button @click="canvas2dApi?.reset()" title="Restablecer vista 2D" class="glass-btn p-2 rounded-lg text-slate-300 w-9 h-9 flex items-center justify-center">
+                <i class="fa-solid fa-rotate-left text-cyan-400"></i>
+            </button>
+            <button @click="canvas2dApi?.setZoom(canvas2dApi.getZoom() + 0.15)" title="Acercar" class="glass-btn p-2 rounded-lg text-slate-300 w-9 h-9 flex items-center justify-center">
+                <i class="fa-solid fa-plus text-cyan-400"></i>
+            </button>
+            <button @click="canvas2dApi?.setZoom(canvas2dApi.getZoom() - 0.15)" title="Alejar" class="glass-btn p-2 rounded-lg text-slate-300 w-9 h-9 flex items-center justify-center">
+                <i class="fa-solid fa-minus text-cyan-400"></i>
+            </button>
+        </div>
+
+        <!-- Selector de proyección -->
+        <div class="absolute bottom-24 left-4 z-10 flex items-center gap-1 glass-panel p-1 rounded-lg pointer-events-auto">
+            <template x-for="mv in [{k:'iso',l:'3D'},{k:'front',l:'Frontal'},{k:'top',l:'Planta'}]" :key="mv.k">
+                <button @click="canvas2dView = mv.k; canvas2dApi?.setView(mv.k)"
+                        :class="['px-3 py-1.5 rounded text-[11px] font-mono font-semibold transition-all', canvas2dView === mv.k ? 'bg-cyan-500 text-black' : 'text-slate-400 hover:text-slate-200']"
+                        x-text="mv.l"></button>
+            </template>
+        </div>
+
+        <!-- Hint -->
+        <div class="absolute top-20 left-4 z-10 pointer-events-none">
+            <div class="glass-panel px-3 py-1.5 rounded-lg flex items-center gap-2">
+                <i class="fa-solid fa-hand-pointer text-cyan-400 text-xs"></i>
+                <span class="text-[10px] font-mono text-slate-400">Arrastra para rotar · Rueda para zoom · Shift+arrastrar para mover</span>
+            </div>
+        </div>
+    </div>
 
     <!-- UI Overlay Layer -->
     <div class="relative z-10 flex flex-col justify-between h-screen w-full pointer-events-none p-4 md:p-6">
@@ -144,6 +179,15 @@
 
             <!-- Controls Header Right -->
             <div class="flex items-center gap-2">
+                <!-- Toggle 3D / 2D -->
+                <div class="glass-btn rounded-lg p-0.5 flex items-center gap-1">
+                    <button @click="viewMode = '3d'" :class="['px-2.5 py-1.5 rounded text-xs font-semibold flex items-center gap-1.5 transition-all', viewMode === '3d' ? 'bg-cyan-500/25 text-cyan-300' : 'text-slate-400 hover:text-slate-200']" title="Escena 3D">
+                        <i class="fa-solid fa-cubes"></i><span class="hidden md:inline">3D</span>
+                    </button>
+                    <button @click="viewMode = '2d'" :class="['px-2.5 py-1.5 rounded text-xs font-semibold flex items-center gap-1.5 transition-all', viewMode === '2d' ? 'bg-cyan-500/25 text-cyan-300' : 'text-slate-400 hover:text-slate-200']" title="Diagrama 2D">
+                        <i class="fa-solid fa-diagram-project"></i><span class="hidden md:inline">2D</span>
+                    </button>
+                </div>
                 <button @click="resetCamera" title="Restablecer Cámara" class="glass-btn px-3 py-2 rounded-lg text-xs font-medium text-slate-300 flex items-center gap-2">
                     <i class="fa-solid fa-video text-cyan-400"></i>
                     <span class="hidden md:inline">Restablecer Vista</span>

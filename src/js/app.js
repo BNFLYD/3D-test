@@ -16,6 +16,9 @@ export default function architectureApp() {
         showAI: true,
         showFlow: true,
         drawerOpen: false,
+        viewMode: '3d',
+        canvas2dView: 'iso',
+        canvas2dApi: null,
 
         steps: [
             { id: 1, label: '01 Experience Layer', file: 'layer-01-experience.html' },
@@ -53,6 +56,13 @@ export default function architectureApp() {
 
             this.$watch('isAutoRotating', (val) => {
                 window.dispatchEvent(new CustomEvent('app-autospin-toggle', { detail: { active: val } }));
+            });
+
+            this.$watch('viewMode', (val) => {
+                if (val === '2d') {
+                    // Forzar resize del canvas 2D cuando se vuelve visible
+                    window.dispatchEvent(new Event('resize'));
+                }
             });
 
             window.addEventListener('3d-step-changed', (e) => {
