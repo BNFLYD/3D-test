@@ -21,14 +21,14 @@ export default function architectureApp() {
         canvas2dApi: null,
 
         steps: [
-            { id: 1, label: '01 Experience Layer', file: 'layer-01-experience.html' },
-            { id: 2, label: '02 Application Layer', file: 'layer-02-application.html' },
-            { id: 3, label: '03 Domain Layer', file: 'layer-03-domain.html' },
-            { id: 4, label: '04 Data Layer', file: 'layer-04-data.html' },
-            { id: 5, label: '05 Infrastructure Layer', file: 'layer-05-infrastructure.html' },
-            { id: 6, label: 'Security Field (Transversal)', file: 'security-field.html' },
-            { id: 7, label: 'AI Module (Selective)', file: 'ai-module.html' },
-            { id: 8, label: 'Arquitectura Completa', file: 'architecture-complete.html' }
+            { id: 1, number: '01', label: '01 Experience Layer', file: 'layer-01-experience.html' },
+            { id: 2, number: '02', label: '02 Application Layer', file: 'layer-02-application.html' },
+            { id: 3, number: '03', label: '03 Domain Layer', file: 'layer-03-domain.html' },
+            { id: 4, number: '04', label: '04 Data Layer', file: 'layer-04-data.html' },
+            { id: 5, number: '05', label: '05 Infrastructure Layer', file: 'layer-05-infrastructure.html' },
+            { id: 6, number: 'SEC', label: 'Security Field (Transversal)', file: 'security-field.html' },
+            { id: 7, number: 'AI', label: 'AI Module (Selective)', file: 'ai-module.html' },
+            { id: 8, number: 'HOD', label: 'Arquitectura Completa', file: 'architecture-complete.html' }
         ],
 
         init() {
