@@ -103,7 +103,10 @@ export function initThree() {
     scene.background = new THREE.Color(0x07090e);
     scene.fog = new THREE.FogExp2(0x07090e, 0.025);
 
-    const aspect = window.innerWidth / window.innerHeight;
+    const rect = container.getBoundingClientRect();
+    const cw = rect.width || window.innerWidth;
+    const ch = rect.height || window.innerHeight;
+    const aspect = cw / ch;
     const d = 11;
     camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, 1, 1000);
     camera.position.set(20, 20, 20);
@@ -111,7 +114,8 @@ export function initThree() {
 
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(cw, ch);
+    renderer.domElement.classList.add('w-full', 'h-full');
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     container.appendChild(renderer.domElement);
@@ -566,21 +570,27 @@ function createDataFlowParticles() {
 }
 
 function onWindowResize() {
-    const aspect = window.innerWidth / window.innerHeight;
+    const container = document.getElementById('webgl-container');
+    if (!container) return;
+    const rect = container.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return;
+    const aspect = rect.width / rect.height;
     const d = 11;
     camera.left = -d * aspect;
     camera.right = d * aspect;
     camera.top = d;
     camera.bottom = -d;
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(rect.width, rect.height);
 }
 
 function onCanvasClick(event) {
     if (event.target.closest('.pointer-events-auto')) return;
+    if (event.target !== renderer.domElement) return;
 
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    const rect = renderer.domElement.getBoundingClientRect();
+    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
     raycaster.setFromCamera(mouse, camera);
     const intersects = raycaster.intersectObjects(scene.children, true);

@@ -57,10 +57,8 @@ export default function architectureApp() {
             });
 
             this.$watch('viewMode', (val) => {
-                if (val === '2d') {
-                    // Forzar resize del canvas 2D cuando se vuelve visible
-                    window.dispatchEvent(new Event('resize'));
-                }
+                // Swap de slots main/mini y resize de ambos renderers
+                window.dispatchEvent(new CustomEvent('app-view-changed', { detail: { mode: val } }));
             });
 
             window.addEventListener('3d-step-changed', (e) => {
@@ -68,6 +66,7 @@ export default function architectureApp() {
             });
 
             this.loadStepContent(this.currentStep);
+            window.dispatchEvent(new CustomEvent('app-view-changed', { detail: { mode: this.viewMode } }));
         },
 
         setStep(step) {

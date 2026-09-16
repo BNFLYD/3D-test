@@ -120,12 +120,10 @@
 </head>
 <body x-data="architectureApp()" x-init="init()" class="h-full w-full bg-[#07090e] text-slate-100 overflow-hidden select-none">
 
-    <!-- 3D Canvas Background (Three.js) -->
-    <div id="webgl-container" x-show="viewMode === '3d'"></div>
-
-    <!-- 2D Canvas Diagram (Canvas 2D isométrico, cámara fija) -->
-    <div id="canvas2d-container" x-show="viewMode === '2d'" class="absolute inset-0 z-[1]">
-        <canvas id="canvas2d" class="w-full h-full cursor-grab active:cursor-grabbing touch-none"></canvas>
+    <!-- Slot principal: aloja la vista activa (3D o 2D) -->
+    <div id="main-viewport" class="absolute inset-0 z-[1]">
+        <!-- 3D Canvas (Three.js) — inicia como vista principal -->
+        <div id="webgl-container" class="w-full h-full"></div>
     </div>
 
     <!-- UI Overlay Layer -->
@@ -149,15 +147,6 @@
 
             <!-- Controls Header Right -->
             <div class="flex items-center gap-2">
-                <!-- Toggle 3D / 2D -->
-                <div class="glass-btn rounded-lg p-0.5 flex items-center gap-1">
-                    <button @click="viewMode = '3d'" :class="['px-2.5 py-1.5 rounded text-xs font-semibold flex items-center gap-1.5 transition-all', viewMode === '3d' ? 'bg-cyan-500/25 text-cyan-300' : 'text-slate-400 hover:text-slate-200']" title="Escena 3D">
-                        <i class="fa-solid fa-cubes"></i><span class="hidden md:inline">3D</span>
-                    </button>
-                    <button @click="viewMode = '2d'" :class="['px-2.5 py-1.5 rounded text-xs font-semibold flex items-center gap-1.5 transition-all', viewMode === '2d' ? 'bg-cyan-500/25 text-cyan-300' : 'text-slate-400 hover:text-slate-200']" title="Diagrama 2D">
-                        <i class="fa-solid fa-diagram-project"></i><span class="hidden md:inline">2D</span>
-                    </button>
-                </div>
                 <button @click="resetCamera" title="Restablecer Cámara" class="glass-btn px-3 py-2 rounded-lg text-xs font-medium text-slate-300 flex items-center gap-2">
                     <i class="fa-solid fa-video text-cyan-400"></i>
                     <span class="hidden md:inline">Restablecer Vista</span>
@@ -174,8 +163,8 @@
         <!-- Center Area: solo drawer de detalle flotando a la derecha -->
         <div class="flex-1 flex justify-end items-center my-4 pointer-events-none">
 
-            <!-- Right Side: Layer Detail Drawer (Active Node Inspector) -->
-            <div id="detail-drawer" x-show="drawerOpen" x-transition class="pointer-events-auto glass-panel p-5 rounded-2xl w-80 md:w-96 transform transition-all duration-500 flex flex-col gap-3">
+            <!-- Right Side: Detail Card con miniatura de la vista alternativa -->
+            <div id="detail-drawer" class="pointer-events-auto glass-panel p-5 rounded-2xl w-96 md:w-[28.8rem] h-[65vh] max-h-[80vh] flex flex-col gap-3">
                 <div class="flex items-center justify-between pb-2 border-b border-white/10">
                     <div class="flex items-center gap-2">
                         <span id="drawer-badge" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold" :class="{
@@ -190,13 +179,22 @@
                         }" x-text="steps.find(s => s.id === currentStep)?.number || '01'"></span>
                         <h3 id="drawer-title" class="font-bold text-base text-white" x-text="`${steps.find(s => s.id === currentStep)?.label || 'Experience Layer'}`"></h3>
                     </div>
-                    <button @click="closeDrawer" class="text-slate-400 hover:text-white p-1">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
                 </div>
 
-                <div id="drawer-content" class="flex-1 overflow-y-auto">
-                    <!-- Content loaded via HTMX -->
+                <!-- Contenido textual via HTMX (oculto, preservado) -->
+                <div id="drawer-content" class="flex-1 overflow-y-auto" hidden></div>
+
+                <!-- Miniatura de la vista inactiva: click = toggle entre vistas -->
+                <div id="mini-viewport" @click="viewMode = viewMode === '3d' ? '2d' : '3d'" title="Cambiar de vista"
+                     class="flex-1 min-h-0 rounded-xl overflow-hidden border border-white/10 cursor-pointer hover:border-cyan-500/40 transition-all relative bg-[#0a0d14]">
+                    <!-- 2D Canvas (isométrico, cámara fija) — inicia como miniatura -->
+                    <div id="canvas2d-container" class="w-full h-full">
+                        <canvas id="canvas2d" class="w-full h-full cursor-grab active:cursor-grabbing touch-none"></canvas>
+                    </div>
+                </div>
+
+                <div class="text-center text-[10px] font-mono text-slate-500 pt-1">
+                    <span x-text="viewMode === '3d' ? 'Miniatura: Diagrama 2D — click para ampliar' : 'Miniatura: Escena 3D — click para ampliar'"></span>
                 </div>
             </div>
         </div>
