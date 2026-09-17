@@ -13,7 +13,7 @@ const FRAME = {
   angleX: 0.25,
   angleY: -0.25,  // -0.78 * 1.25 (25% más a la izquierda)
   zoom: 2.15,      // 1 * 1.25 (25% más de acercamiento)
-  panX: -45,
+  panX: -90,
   panY: -45,
 }
 
