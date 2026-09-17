@@ -13,8 +13,8 @@ const FRAME = {
   angleX: 0.25,
   angleY: -0.25,  // -0.78 * 1.25 (25% más a la izquierda)
   zoom: 2.15,      // 1 * 1.25 (25% más de acercamiento)
-  panX: -395,
-  panY: 0,
+  panX: -45,
+  panY: -45,
 }
 
 // Mapeo de los pasos de Alpine (1-8) a flags de visibilidad acumulativa
