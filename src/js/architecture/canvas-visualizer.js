@@ -8,14 +8,25 @@ import { drawBlock3D, drawCylinder3D, drawConnectionLine, drawSecurityEnvelope, 
 
 const CYAN = '#00f3ff'
 
-// Posición de cámara fija — ajustar estos valores para centrar el diagrama
-const FRAME = {
+// Posición de cámara fija para la vista PRINCIPAL (full-size)
+const FRAME_MAIN = {
   angleX: 0.25,
-  angleY: -0.25,  // -0.78 * 1.25 (25% más a la izquierda)
-  zoom: 2.15,      // 1 * 1.25 (25% más de acercamiento)
+  angleY: -0.25,
+  zoom: 2.15,
   panX: -90,
   panY: -45,
 }
+
+// Posición de cámara fija para la MINIATURA (dentro de la card)
+const FRAME_MINI = {
+  angleX: 0.25,
+  angleY: -0.25,
+  zoom: 1.1,
+  panX: 0,
+  panY: 0,
+}
+
+const frameFor = (mode) => (mode === '2d' ? FRAME_MAIN : FRAME_MINI)
 
 // Mapeo de los pasos de Alpine (1-8) a flags de visibilidad acumulativa
 // 1 Experience · 2 Application · 3 Domain · 4 Data · 5 Infrastructure ·
@@ -44,11 +55,13 @@ export function initCanvasVisualizer({ container, canvas }) {
   if (!ctx) return
 
   const engine = {
-    angleX: FRAME.angleX,
-    angleY: FRAME.angleY,
-    zoom: FRAME.zoom,
-    panX: FRAME.panX,
-    panY: FRAME.panY,
+    angleX: FRAME_MINI.angleX,
+    angleY: FRAME_MINI.angleY,
+    zoom: FRAME_MINI.zoom,
+    panX: FRAME_MINI.panX,
+    panY: FRAME_MINI.panY,
+    target: { ...FRAME_MINI }, // frame destino para el lerp
+    lerping: false,
     dragging: false,
     lastX: 0,
     lastY: 0,
@@ -95,6 +108,29 @@ export function initCanvasVisualizer({ container, canvas }) {
 
     const s = engine
     s.time += 0.016
+
+    // Lerp de la cámara hacia el frame destino (transición suave main <-> mini)
+    if (s.lerping) {
+      const k = s.reduced ? 1 : 0.15
+      const t = s.target
+      s.angleX += (t.angleX - s.angleX) * k
+      s.angleY += (t.angleY - s.angleY) * k
+      s.zoom += (t.zoom - s.zoom) * k
+      s.panX += (t.panX - s.panX) * k
+      s.panY += (t.panY - s.panY) * k
+      // Snap cuando está suficientemente cerca
+      if (
+        Math.abs(t.angleX - s.angleX) < 0.001 &&
+        Math.abs(t.angleY - s.angleY) < 0.001 &&
+        Math.abs(t.zoom - s.zoom) < 0.001 &&
+        Math.abs(t.panX - s.panX) < 0.5 &&
+        Math.abs(t.panY - s.panY) < 0.5
+      ) {
+        s.angleX = t.angleX; s.angleY = t.angleY; s.zoom = t.zoom
+        s.panX = t.panX; s.panY = t.panY
+        s.lerping = false
+      }
+    }
 
     ctx.clearRect(0, 0, w, h)
     ctx.save()
@@ -256,8 +292,13 @@ export function initCanvasVisualizer({ container, canvas }) {
     // explodeFactor de Alpine: 0 → 1.2 → explode: 1 → 1.6
     engine.explode = 1 + (e.detail?.factor ?? 0) * 0.5
   }
+  const onViewChanged = (e) => {
+    engine.target = { ...frameFor(e.detail?.mode ?? '3d') }
+    engine.lerping = true
+  }
   window.addEventListener('app-step-changed', onStepChanged)
   window.addEventListener('app-explode-changed', onExplodeChanged)
+  window.addEventListener('app-view-changed', onViewChanged)
 
   rafId = requestAnimationFrame(render)
 
@@ -271,6 +312,7 @@ export function initCanvasVisualizer({ container, canvas }) {
       window.removeEventListener('resize', resize)
       window.removeEventListener('app-step-changed', onStepChanged)
       window.removeEventListener('app-explode-changed', onExplodeChanged)
+      window.removeEventListener('app-view-changed', onViewChanged)
       canvas.removeEventListener('mousedown', onDown)
       window.removeEventListener('mouseup', onUp)
       window.removeEventListener('mousemove', onMove)
