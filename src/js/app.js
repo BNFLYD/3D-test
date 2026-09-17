@@ -20,11 +20,11 @@ export default function architectureApp() {
         canvas2dApi: null,
 
         steps: [
-            { id: 1, number: '01', label: '01 Experience Layer', shortLabel: 'Experience', file: 'layer-01-experience.html' },
-            { id: 2, number: '02', label: '02 Application Layer', shortLabel: 'Application', file: 'layer-02-application.html' },
-            { id: 3, number: '03', label: '03 Domain Layer', shortLabel: 'Domain', file: 'layer-03-domain.html' },
-            { id: 4, number: '04', label: '04 Data Layer', shortLabel: 'Data', file: 'layer-04-data.html' },
-            { id: 5, number: '05', label: '05 Infrastructure Layer', shortLabel: 'Infrastructure', file: 'layer-05-infrastructure.html' },
+            { id: 1, number: '01', label: 'Experience Layer', shortLabel: 'Experience', file: 'layer-01-experience.html' },
+            { id: 2, number: '02', label: 'Application Layer', shortLabel: 'Application', file: 'layer-02-application.html' },
+            { id: 3, number: '03', label: 'Domain Layer', shortLabel: 'Domain', file: 'layer-03-domain.html' },
+            { id: 4, number: '04', label: 'Data Layer', shortLabel: 'Data', file: 'layer-04-data.html' },
+            { id: 5, number: '05', label: 'Infrastructure Layer', shortLabel: 'Infrastructure', file: 'layer-05-infrastructure.html' },
             { id: 6, number: 'SEC', label: 'Security Field (Transversal)', shortLabel: 'Security', file: 'security-field.html' },
             { id: 7, number: 'AI', label: 'AI Module (Selective)', shortLabel: 'AI', file: 'ai-module.html' },
             { id: 8, number: 'HOD', label: 'Arquitectura Completa', shortLabel: 'Arquitectura', file: 'architecture-complete.html' }
