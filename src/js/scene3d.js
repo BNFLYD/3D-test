@@ -5,6 +5,23 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import gsap from 'gsap'
 
+// Frames de cámara por defecto para cada slot (main = vista principal, mini = miniatura)
+const FRAME3D_MAIN = {
+    position: { x: 20, y: 20, z: 20 },
+    target: { x: 0, y: 0, z: 0 },
+    zoom: 1,
+    autoRotate: false
+}
+const FRAME3D_MINI = {
+    position: { x: 20, y: 20, z: 20 },
+    target: { x: 0, y: 0, z: 0 },
+    zoom: 1,
+    autoRotate: true
+}
+const frame3DFor = (mode) => (mode === '3d' ? FRAME3D_MAIN : FRAME3D_MINI)
+
+let currentFrame3D = FRAME3D_MAIN
+
 const LAYERS_DATA = [
     {
         id: 'exp',
@@ -657,6 +674,15 @@ function updateLayerVisibility() {
     }
 }
 
+function applyFrame3D(f) {
+    currentFrame3D = f;
+    gsap.to(camera.position, { x: f.position.x, y: f.position.y, z: f.position.z, duration: 0.8, ease: 'power2.inOut' });
+    gsap.to(controls.target, { x: f.target.x, y: f.target.y, z: f.target.z, duration: 0.8, ease: 'power2.inOut' });
+    gsap.to(camera, { zoom: f.zoom, duration: 0.8, ease: 'power2.inOut', onUpdate: () => camera.updateProjectionMatrix() });
+    controls.autoRotate = f.autoRotate;
+    controls.autoRotateSpeed = 2.0;
+}
+
 function bindAppEvents() {
     window.addEventListener('app-step-changed', (e) => {
         currentStep = e.detail.step;
@@ -689,9 +715,12 @@ function bindAppEvents() {
         controls.autoRotateSpeed = 2.0;
     });
 
+    window.addEventListener('app-view-changed', (e) => {
+        applyFrame3D(frame3DFor(e.detail?.mode ?? '3d'));
+    });
+
     window.addEventListener('app-reset-camera', () => {
-        gsap.to(camera.position, { x: 20, y: 20, z: 20, duration: 1, ease: 'power2.inOut' });
-        controls.target.set(0, 0, 0);
+        applyFrame3D(currentFrame3D);
     });
 }
 

@@ -20,14 +20,14 @@ export default function architectureApp() {
         canvas2dApi: null,
 
         steps: [
-            { id: 1, number: '01', label: 'Experience Layer', shortLabel: 'Experience', file: 'layer-01-experience.html' },
-            { id: 2, number: '02', label: 'Application Layer', shortLabel: 'Application', file: 'layer-02-application.html' },
-            { id: 3, number: '03', label: 'Domain Layer', shortLabel: 'Domain', file: 'layer-03-domain.html' },
-            { id: 4, number: '04', label: 'Data Layer', shortLabel: 'Data', file: 'layer-04-data.html' },
-            { id: 5, number: '05', label: 'Infrastructure Layer', shortLabel: 'Infrastructure', file: 'layer-05-infrastructure.html' },
-            { id: 6, number: 'SEC', label: 'Security Field (Transversal)', shortLabel: 'Security', file: 'security-field.html' },
-            { id: 7, number: 'AI', label: 'AI Module (Selective)', shortLabel: 'AI', file: 'ai-module.html' },
-            { id: 8, number: 'HOD', label: 'Arquitectura Completa', shortLabel: 'Arquitectura', file: 'architecture-complete.html' }
+            { id: 1, number: '01', label: 'Experience Layer', shortLabel: 'Experience', file: 'layer-01-experience.html', desc: 'Punto de contacto e interacción multicanal con usuarios y clientes finales. Gestiona clientes Web, Móviles, APIs externas y canales directos como WhatsApp.' },
+            { id: 2, number: '02', label: 'Application Layer', shortLabel: 'Application', file: 'layer-02-application.html', desc: 'Orquestación de procesos de negocio, comunicación asíncrona, integración de servicios externos y lógica de flujos de trabajo.' },
+            { id: 3, number: '03', label: 'Domain Layer', shortLabel: 'Domain', file: 'layer-03-domain.html', desc: 'Núcleo de inteligencia operativa. Contiene el modelo de dominio agnóstico a la tecnología, reglas de negocio puras y procesos del core.' },
+            { id: 4, number: '04', label: 'Data Layer', shortLabel: 'Data', file: 'layer-04-data.html', desc: 'Persistencia distribuida, almacenamiento relacional, motores de búsqueda semántica, caché en memoria y almacenamiento de objetos.' },
+            { id: 5, number: '05', label: 'Infrastructure Layer', shortLabel: 'Infrastructure', file: 'layer-05-infrastructure.html', desc: 'Soporte físico y virtualizado. Nube híbrida, orquestación de contenedores y nodos perimetrales (Edge) para baja latencia.' },
+            { id: 6, number: 'SEC', label: 'Security Field (Transversal)', shortLabel: 'Security', file: 'security-field.html', desc: 'Políticas de seguridad Zero-Trust transversales que envuelven toda la pila, desde la red perimetral hasta el cifrado en reposo.' },
+            { id: 7, number: 'AI', label: 'AI Module (Selective)', shortLabel: 'AI', file: 'ai-module.html', desc: 'Capacidades de inteligencia artificial y aprendizaje automático integradas de manera selectiva y contextual ("when it makes sense").' },
+            { id: 8, number: 'HOD', label: 'Arquitectura Completa', shortLabel: 'Arquitectura', file: 'architecture-complete.html', desc: 'La arquitectura de sistemas HOD está consolidada como un ecosistema cohesivo y escalable. Cada capa interactúa armónicamente garantizando robustez y alta disponibilidad.' }
         ],
 
         init() {
