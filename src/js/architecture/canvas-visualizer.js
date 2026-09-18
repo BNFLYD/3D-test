@@ -4,7 +4,7 @@
 
 import { NODES, CONNECTIONS, AI_CAPABILITIES, SECURITY_ENVELOPE } from './data.js'
 import { project } from './projection.js'
-import { drawBlock3D, drawCylinder3D, drawConnectionLine, drawSecurityEnvelope, drawNodeLabel } from './draw.js'
+import { drawBlock3D, drawCylinder3D, drawConnectionLine, drawSecurityEnvelope, drawNodeLabel } from './models/index.js'
 
 const CYAN = '#00f3ff'
 
