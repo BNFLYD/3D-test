@@ -73,6 +73,18 @@ export default function architectureApp() {
             this.currentStep = step;
         },
 
+        prevStep() {
+            let prev = this.currentStep - 1;
+            if (prev < 1) prev = this.steps.length;
+            this.currentStep = prev;
+        },
+
+        nextStep() {
+            let next = this.currentStep + 1;
+            if (next > this.steps.length) next = 1;
+            this.currentStep = next;
+        },
+
         loadStepContent(step) {
             const stepData = this.steps.find(s => s.id === step);
             if (!stepData) return;
@@ -95,9 +107,7 @@ export default function architectureApp() {
             } else {
                 this.isAutoStory = true;
                 this.autoStoryTimer = setInterval(() => {
-                    let next = this.currentStep + 1;
-                    if (next > 8) next = 1;
-                    this.setStep(next);
+                    this.nextStep();
                 }, 3500);
             }
         },

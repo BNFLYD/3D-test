@@ -206,15 +206,42 @@
             </div>
         </div>
 
-        <!-- Bottom Floating Controls Bar: selector de etapas horizontal -->
-        <footer class="pointer-events-auto glass-panel p-4 px-5 rounded-2xl">
-            <div class="flex items-stretch gap-2 overflow-x-auto" id="step-footer">
-                <template x-for="step in steps" :key="step.id">
-                    <button :id="`step-btn-${step.id}`" @click="setStep(step.id)" :class="currentStep === step.id ? 'active' : ''" class="glass-btn flex-1 min-w-[110px] flex flex-col items-center justify-center gap-1.5 px-4 py-3 rounded-xl transition-all">
-                        <span class="text-[10px] font-mono font-bold tracking-wider" x-text="step.number"></span>
-                        <span class="text-xs font-medium whitespace-nowrap" x-text="step.shortLabel"></span>
+        <!-- Bottom Floating Controls Bar: prev/next + timeline clickeable -->
+        <footer class="pointer-events-auto glass-panel p-3 px-5 rounded-2xl">
+            <div class="flex items-center gap-4">
+
+                <!-- Prev / Next -->
+                <div class="flex items-center gap-2">
+                    <button @click="prevStep()" title="Etapa anterior" class="glass-btn w-9 h-9 rounded-lg text-slate-300 flex items-center justify-center">
+                        <i class="fa-solid fa-chevron-left text-cyan-400"></i>
                     </button>
-                </template>
+                    <button @click="nextStep()" title="Etapa siguiente" class="glass-btn w-9 h-9 rounded-lg text-slate-300 flex items-center justify-center">
+                        <i class="fa-solid fa-chevron-right text-cyan-400"></i>
+                    </button>
+                </div>
+
+                <!-- Timeline de etapas (clickeable) -->
+                <div class="flex-1 flex items-center" id="step-timeline">
+                    <template x-for="(step, idx) in steps" :key="step.id">
+                        <div class="flex-1 flex items-center">
+                            <!-- Nodo de la etapa -->
+                            <button @click="setStep(step.id)" :title="step.label"
+                                    class="relative shrink-0 mx-auto w-3 h-3 rounded-full border transition-all duration-300"
+                                    :class="[
+                                        currentStep === step.id
+                                            ? 'bg-cyan-400 border-cyan-300 shadow-[0_0_12px_2px_rgba(0,243,255,0.5)] scale-125'
+                                            : step.id < currentStep
+                                                ? 'bg-cyan-400/60 border-cyan-500/50 hover:bg-cyan-300'
+                                                : 'bg-transparent border-slate-600 hover:border-cyan-500/60'
+                                    ]">
+                            </button>
+
+                            <!-- Segmento de línea entre nodos (no va después del último) -->
+                            <div x-show="idx < steps.length - 1" class="flex-1 h-px mx-1 transition-colors duration-300"
+                                 :class="step.id < currentStep ? 'bg-cyan-400/60' : 'bg-white/10'"></div>
+                        </div>
+                    </template>
+                </div>
             </div>
         </footer>
     </div>
