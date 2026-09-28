@@ -1,39 +1,40 @@
 // HOD Models 3D - layers.js
 // El stack de 5 capas: geometría, texturas, glow, handles y visibilidad por etapa
+// Narrativa bottom-up: se construye desde Infrastructure (abajo) hacia Experience (arriba)
 
 import * as THREE from 'three'
 import gsap from 'gsap'
 
 export const LAYERS_DATA = [
     {
-        id: 'exp',
+        id: 'inf',
         step: 1,
         number: '01',
-        name: 'EXPERIENCE',
-        subtitle: 'Web · Mobile · API · WhatsApp',
-        desc: 'Punto de contacto e interacción multicanal con usuarios y clientes finales.',
-        relation: 'Interactúa directamente con la capa de Aplicación a través de contratos de API seguros.',
-        colorHex: 0x00f3ff,
-        accentColor: '#00f3ff',
-        bgGradient: ['#003852', '#00f3ff'],
-        icon: 'fa-mobile-screen-button',
-        subComponents: ['Web App (React/Next.js)', 'Mobile Native (iOS/Android)', 'REST & GraphQL APIs', 'WhatsApp Business Bot'],
-        yBase: 5.2
+        name: 'INFRASTRUCTURE',
+        subtitle: 'Cloud · On-Prem · Hybrid · Edge',
+        desc: 'Capa base que soporta la nube híbrida, cómputo distribuido y redes de baja latencia.',
+        relation: 'Capa fundamental sobre la cual se despliegan todos los recursos de datos y cómputo.',
+        colorHex: 0xc5bfae,
+        accentColor: '#c5bfae',
+        bgGradient: ['#001133', '#0066ff'],
+        icon: 'fa-cloud',
+        subComponents: ['AWS / GCP Multi-cloud', 'On-Premise Private Cluster', 'Edge Computing Nodes', 'Kubernetes Containers'],
+        yBase: -5.2
     },
     {
-        id: 'app',
+        id: 'dat',
         step: 2,
         number: '02',
-        name: 'APPLICATION',
-        subtitle: 'Services · Workflows · Integrations',
-        desc: 'Orquestación de procesos de negocio, comunicación asíncrona y microservicios.',
-        relation: 'Ejecuta operaciones consultando las Reglas de Dominio y disparando eventos.',
-        colorHex: 0x00d2ff,
-        accentColor: '#00d2ff',
-        bgGradient: ['#002244', '#0099ff'],
-        icon: 'fa-gears',
-        subComponents: ['Microservices Mesh', 'Workflow Orchestration', 'Event Bus / Webhooks', 'Third-party Integrations'],
-        yBase: 2.6
+        name: 'DATA',
+        subtitle: 'Database · Search · Storage · Cache',
+        desc: 'Persistencia distribuida, almacenamiento relacional, búsquedas indexadas y caché rápido.',
+        relation: 'Reside sobre la Infraestructura física o virtualizada para garantizar alta disponibilidad.',
+        colorHex: 0xc5bfae,
+        accentColor: '#c5bfae',
+        bgGradient: ['#280f54', '#8b5cf6'],
+        icon: 'fa-database',
+        subComponents: ['PostgreSQL / Distributed DB', 'ElasticSearch / Vector DB', 'Object Storage (S3)', 'Redis Memory Cache'],
+        yBase: -2.6
     },
     {
         id: 'dom',
@@ -43,42 +44,42 @@ export const LAYERS_DATA = [
         subtitle: 'Business Rules · Entities · Processes',
         desc: 'Núcleo de inteligencia operativa. Contiene el modelo de dominio agnóstico a la tecnología.',
         relation: 'Utiliza las abstracciones de persistencia de la capa de Datos para guardar estado.',
-        colorHex: 0x10b981,
-        accentColor: '#10b981',
+        colorHex: 0xc5bfae,
+        accentColor: '#c5bfae',
         bgGradient: ['#023824', '#10b981'],
         icon: 'fa-diagram-project',
         subComponents: ['Core Entities', 'Domain Logic & Invariants', 'Business State Machines', 'Domain Events'],
         yBase: 0.0
     },
     {
-        id: 'dat',
+        id: 'app',
         step: 4,
         number: '04',
-        name: 'DATA',
-        subtitle: 'Database · Search · Storage · Cache',
-        desc: 'Persistencia distribuida, almacenamiento relacional, búsquedas indexadas y caché rápido.',
-        relation: 'Reside sobre la Infraestructura física o virtualizada para garantizar alta disponibilidad.',
-        colorHex: 0x8b5cf6,
-        accentColor: '#8b5cf6',
-        bgGradient: ['#280f54', '#8b5cf6'],
-        icon: 'fa-database',
-        subComponents: ['PostgreSQL / Distributed DB', 'ElasticSearch / Vector DB', 'Object Storage (S3)', 'Redis Memory Cache'],
-        yBase: -2.6
+        name: 'APPLICATION',
+        subtitle: 'Services · Workflows · Integrations',
+        desc: 'Orquestación de procesos de negocio, comunicación asíncrona y microservicios.',
+        relation: 'Ejecuta operaciones consultando las Reglas de Dominio y disparando eventos.',
+        colorHex: 0xc5bfae,
+        accentColor: '#c5bfae',
+        bgGradient: ['#002244', '#0099ff'],
+        icon: 'fa-gears',
+        subComponents: ['Microservices Mesh', 'Workflow Orchestration', 'Event Bus / Webhooks', 'Third-party Integrations'],
+        yBase: 2.6
     },
     {
-        id: 'inf',
+        id: 'exp',
         step: 5,
         number: '05',
-        name: 'INFRASTRUCTURE',
-        subtitle: 'Cloud · On-Prem · Hybrid · Edge',
-        desc: 'Capa base que soporta la nube híbrida, cómputo distribuido y redes de baja latencia.',
-        relation: 'Capa fundamental sobre la cual se despliegan todos los recursos de datos y cómputo.',
-        colorHex: 0x0066ff,
-        accentColor: '#0066ff',
-        bgGradient: ['#001133', '#0066ff'],
-        icon: 'fa-cloud',
-        subComponents: ['AWS / GCP Multi-cloud', 'On-Premise Private Cluster', 'Edge Computing Nodes', 'Kubernetes Containers'],
-        yBase: -5.2
+        name: 'EXPERIENCE',
+        subtitle: 'Web · Mobile · API · WhatsApp',
+        desc: 'Punto de contacto e interacción multicanal con usuarios y clientes finales.',
+        relation: 'Interactúa directamente con la capa de Aplicación a través de contratos de API seguros.',
+        colorHex: 0xc5bfae,
+        accentColor: '#c5bfae',
+        bgGradient: ['#003852', '#00f3ff'],
+        icon: 'fa-mobile-screen-button',
+        subComponents: ['Web App (React/Next.js)', 'Mobile Native (iOS/Android)', 'REST & GraphQL APIs', 'WhatsApp Business Bot'],
+        yBase: 5.2
     }
 ]
 
@@ -120,11 +121,13 @@ function createLayerTopTexture(layer) {
 
     if (layer.id === 'inf') {
         ctx.beginPath()
-        ctx.arc(-60, 20, 70, Math.PI * 0.8, Math.PI * 1.85)
-        ctx.arc(40, -50, 90, Math.PI * 1.1, Math.PI * 1.9)
-        ctx.arc(120, 30, 60, Math.PI * 1.5, Math.PI * 0.4)
-        ctx.lineTo(-120, 90)
-        ctx.arc(-120, 30, 60, Math.PI * 0.5, Math.PI * 1.2)
+        ctx.moveTo(-110, 45)
+        ctx.lineTo(110, 45)
+        ctx.bezierCurveTo(155, 45, 175, 10, 160, -25)
+        ctx.bezierCurveTo(175, -75, 130, -110, 85, -100)
+        ctx.bezierCurveTo(65, -135, 15, -135, -10, -110)
+        ctx.bezierCurveTo(-50, -130, -100, -90, -90, -45)
+        ctx.bezierCurveTo(-140, -40, -155, 15, -110, 45)
         ctx.closePath()
         ctx.stroke()
     } else if (layer.id === 'dat') {
@@ -184,38 +187,75 @@ function createLayerTopTexture(layer) {
     return texture
 }
 
-function createSideGrillTexture(accentHex) {
+function createSideLogoTexture(layer) {
     const canvas = document.createElement('canvas')
     canvas.width = 512
     canvas.height = 256
     const ctx = canvas.getContext('2d')
 
-    ctx.fillStyle = '#0a0d14'
+    // Fondo beige mate para el lateral del bloque
+    ctx.fillStyle = '#c5bfae'
     ctx.fillRect(0, 0, 512, 256)
 
-    ctx.fillStyle = '#161d2a'
-    const numVents = 24
-    const ventWidth = 12
-    const gap = 8
-    const startX = 30
+    ctx.save()
+    ctx.translate(256, 128)
+    ctx.scale(0.75, 0.75)
 
-    for (let i = 0; i < numVents; i++) {
-        const x = startX + i * (ventWidth + gap)
-        ctx.fillRect(x, 30, ventWidth, 196)
+    // Gradiente metálico oscuro para el logo en relieve
+    const metalGrad = ctx.createLinearGradient(-100, -100, 100, 100)
+    metalGrad.addColorStop(0, '#273549')
+    metalGrad.addColorStop(0.5, '#07111e')
+    metalGrad.addColorStop(1, '#020617')
+    ctx.fillStyle = metalGrad
+    ctx.strokeStyle = '#020617'
+    ctx.lineWidth = 8
+    ctx.lineCap = 'round'
+    ctx.lineJoin = 'round'
 
-        ctx.fillStyle = accentHex
-        ctx.fillRect(x + 3, 30, 2, 196)
-        ctx.fillStyle = '#161d2a'
+    if (layer.id === 'inf') {
+        ctx.beginPath()
+        ctx.moveTo(-90, 35)
+        ctx.lineTo(90, 35)
+        ctx.bezierCurveTo(125, 35, 140, 10, 130, -15)
+        ctx.bezierCurveTo(140, -55, 105, -85, 70, -75)
+        ctx.bezierCurveTo(55, -105, 15, -105, -5, -85)
+        ctx.bezierCurveTo(-35, -100, -75, -70, -70, -35)
+        ctx.bezierCurveTo(-110, -30, -120, 10, -90, 35)
+        ctx.closePath()
+        ctx.fill()
+        ctx.stroke()
+    } else if (layer.id === 'dat') {
+        for (let y of [-60, 0, 60]) {
+            ctx.beginPath()
+            ctx.ellipse(0, y, 110, 35, 0, 0, Math.PI * 2)
+            ctx.fill()
+            ctx.stroke()
+        }
+    } else if (layer.id === 'dom') {
+        ctx.beginPath()
+        for (let i = 0; i < 6; i++) {
+            const angle = (i * Math.PI) / 3
+            const x = 110 * Math.cos(angle)
+            const y = 110 * Math.sin(angle)
+            if (i === 0) ctx.moveTo(x, y)
+            else ctx.lineTo(x, y)
+        }
+        ctx.closePath()
+        ctx.fill()
+        ctx.stroke()
+    } else if (layer.id === 'app') {
+        ctx.beginPath()
+        ctx.rect(-90, -90, 180, 180)
+        ctx.fill()
+        ctx.stroke()
+    } else if (layer.id === 'exp') {
+        ctx.beginPath()
+        ctx.rect(-100, -70, 200, 130)
+        ctx.fill()
+        ctx.stroke()
     }
 
-    ctx.fillStyle = '#334155'
-    ctx.beginPath()
-    ctx.arc(15, 15, 6, 0, Math.PI * 2)
-    ctx.arc(497, 15, 6, 0, Math.PI * 2)
-    ctx.arc(15, 241, 6, 0, Math.PI * 2)
-    ctx.arc(497, 241, 6, 0, Math.PI * 2)
-    ctx.fill()
-
+    ctx.restore()
     return new THREE.CanvasTexture(canvas)
 }
 
@@ -260,14 +300,14 @@ export function createLayers(scene) {
         blockGeo.center()
 
         const topTexture = createLayerTopTexture(layerData)
-        const sideGrillTexture = createSideGrillTexture(layerData.accentColor)
+        const sideLogoTexture = createSideLogoTexture(layerData)
 
         const materials = [
             new THREE.MeshStandardMaterial({
-                color: 0x111622,
-                metalness: 0.8,
-                roughness: 0.2,
-                map: sideGrillTexture
+                color: 0xc5bfae,
+                metalness: 0.05,
+                roughness: 0.45,
+                map: sideLogoTexture
             }),
             new THREE.MeshStandardMaterial({
                 color: 0xffffff,
@@ -283,7 +323,7 @@ export function createLayers(scene) {
         layerGroup.add(blockMesh)
 
         const handleGeo = new THREE.CylinderGeometry(0.08, 0.08, 1.2, 16)
-        const handleMat = new THREE.MeshStandardMaterial({ color: 0x00f3ff, metalness: 0.9, roughness: 0.1 })
+        const handleMat = new THREE.MeshStandardMaterial({ color: 0x07111e, metalness: 0.9, roughness: 0.1 })
 
         const leftHandle = new THREE.Mesh(handleGeo, handleMat)
         leftHandle.position.set(-w - 0.1, 0, 0)
@@ -298,8 +338,8 @@ export function createLayers(scene) {
         canvasGlow.width = 256; canvasGlow.height = 256
         const gCtx = canvasGlow.getContext('2d')
         const gRad = gCtx.createRadialGradient(128, 128, 10, 128, 128, 128)
-        gRad.addColorStop(0, layerData.accentColor)
-        gRad.addColorStop(0.5, layerData.accentColor + '55')
+        gRad.addColorStop(0, '#08b8d8')
+        gRad.addColorStop(0.5, '#08b8d855')
         gRad.addColorStop(1, 'transparent')
         gCtx.fillStyle = gRad
         gCtx.fillRect(0, 0, 256, 256)

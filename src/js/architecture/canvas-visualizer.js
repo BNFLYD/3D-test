@@ -29,13 +29,13 @@ const FRAME_MINI = {
 const frameFor = (mode) => (mode === '2d' ? FRAME_MAIN : FRAME_MINI)
 
 // Mapeo de los pasos de Alpine (1-8) a flags de visibilidad acumulativa
-// 1 Experience · 2 Application · 3 Domain · 4 Data · 5 Infrastructure ·
-// 6 Security · 7 AI · 8 Completo
+// Narrativa bottom-up: 1 Infrastructure · 2 Data · 3 Domain · 4 Application ·
+// 5 Experience · 6 Security · 7 AI · 8 Completo
 const STEP_VIS = {
-  1: { interface: true, application: false, domain: false, data: false, infrastructure: false, security: false, ai: false },
-  2: { interface: true, application: true, domain: false, data: false, infrastructure: false, security: false, ai: false },
-  3: { interface: true, application: true, domain: true, data: false, infrastructure: false, security: false, ai: false },
-  4: { interface: true, application: true, domain: true, data: true, infrastructure: false, security: false, ai: false },
+  1: { interface: false, application: false, domain: false, data: false, infrastructure: true, security: false, ai: false },
+  2: { interface: false, application: false, domain: false, data: true, infrastructure: true, security: false, ai: false },
+  3: { interface: false, application: false, domain: true, data: true, infrastructure: true, security: false, ai: false },
+  4: { interface: false, application: true, domain: true, data: true, infrastructure: true, security: false, ai: false },
   5: { interface: true, application: true, domain: true, data: true, infrastructure: true, security: false, ai: false },
   6: { interface: true, application: true, domain: true, data: true, infrastructure: true, security: true, ai: false },
   7: { interface: true, application: true, domain: true, data: true, infrastructure: true, security: true, ai: true },
