@@ -149,27 +149,15 @@ function createSideLogoTexture(layer) {
 
     ctx.clearRect(0, 0, 1024, 320)
 
-    // Gradiente metálico oscuro (steel graphite) para el logo
-    const logoGradient = ctx.createLinearGradient(400, 40, 624, 280)
-    logoGradient.addColorStop(0, '#273549')
-    logoGradient.addColorStop(0.3, '#0f172a')
-    logoGradient.addColorStop(0.7, '#020617')
-    logoGradient.addColorStop(1, '#1e293b')
-
     ctx.save()
     ctx.translate(512, 160)
 
-    ctx.strokeStyle = logoGradient
-    ctx.fillStyle = logoGradient
-    ctx.lineWidth = 18
+    // Logo negro sólido, plano y fino
+    ctx.strokeStyle = '#000000'
+    ctx.fillStyle = '#000000'
+    ctx.lineWidth = 12
     ctx.lineCap = 'round'
     ctx.lineJoin = 'round'
-
-    // Drop shadow para efecto relieve metálico
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.45)'
-    ctx.shadowBlur = 12
-    ctx.shadowOffsetX = 3
-    ctx.shadowOffsetY = 5
 
     if (layer.id === 'exp') {
         // Experience: monitor de escritorio + dispositivo móvil
@@ -183,7 +171,7 @@ function createSideLogoTexture(layer) {
         ctx.strokeRect(35, -45, 65, 110)
         ctx.beginPath()
         ctx.arc(67, 50, 6, 0, Math.PI * 2)
-        ctx.fillStyle = '#64748b'
+        ctx.fillStyle = '#000000'
         ctx.fill()
     } else if (layer.id === 'app') {
         // Application: nodos de microservicios interconectados
