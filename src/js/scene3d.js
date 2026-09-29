@@ -54,8 +54,8 @@ export function initThree() {
     if (!container) return
 
     scene = new THREE.Scene()
-    scene.background = new THREE.Color(0x07090e)
-    scene.fog = new THREE.FogExp2(0x07090e, 0.025)
+    scene.background = new THREE.Color(0x030712)
+    scene.fog = new THREE.FogExp2(0x030712, 0.025)
 
     const rect = container.getBoundingClientRect()
     const cw = rect.width || window.innerWidth
@@ -81,23 +81,19 @@ export function initThree() {
     controls.minDistance = 5
     controls.maxDistance = 50
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.1)
     scene.add(ambientLight)
 
-    const dirLight1 = new THREE.DirectionalLight(0xffffff, 1.2)
-    dirLight1.position.set(15, 30, 20)
+    const dirLight1 = new THREE.DirectionalLight(0xfff5ea, 1.2)
+    dirLight1.position.set(15, 25, 15)
     dirLight1.castShadow = true
     dirLight1.shadow.mapSize.width = 2048
     dirLight1.shadow.mapSize.height = 2048
     scene.add(dirLight1)
 
-    const dirLight2 = new THREE.DirectionalLight(0x00f3ff, 0.8)
-    dirLight2.position.set(-20, 10, -15)
+    const dirLight2 = new THREE.DirectionalLight(0x38bdf8, 0.35)
+    dirLight2.position.set(-15, -10, -15)
     scene.add(dirLight2)
-
-    const bottomPointLight = new THREE.PointLight(0x0088ff, 1.5, 30)
-    bottomPointLight.position.set(0, -8, 0)
-    scene.add(bottomPointLight)
 
     raycaster = new THREE.Raycaster()
     mouse = new THREE.Vector2()
@@ -108,6 +104,9 @@ export function initThree() {
     securityGroup = createSecurityField(scene)
     aiNodeGroup = createAINode(scene)
     flowParticlesGroup = createFlowParticles(scene)
+
+    // Estado inicial: solo la capa 1 (Infrastructure) visible, coherente con currentStep=1
+    updateLayerVisibility()
 
     window.addEventListener('resize', onWindowResize)
     window.addEventListener('click', onCanvasClick)

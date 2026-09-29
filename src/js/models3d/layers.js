@@ -1,5 +1,6 @@
 // HOD Models 3D - layers.js
-// El stack de 5 capas: geometría, texturas, glow, handles y visibilidad por etapa
+// Stack de 5 capas — estilo prototipo: cuerpo beige mate, tapa turquoise con
+// cyber grid, badges de logo metálico en relieve en las 4 caras laterales.
 // Narrativa bottom-up: se construye desde Infrastructure (abajo) hacia Experience (arriba)
 
 import * as THREE from 'three'
@@ -11,75 +12,80 @@ export const LAYERS_DATA = [
         step: 1,
         number: '01',
         name: 'INFRASTRUCTURE',
-        subtitle: 'Cloud · On-Prem · Hybrid · Edge',
-        desc: 'Capa base que soporta la nube híbrida, cómputo distribuido y redes de baja latencia.',
-        relation: 'Capa fundamental sobre la cual se despliegan todos los recursos de datos y cómputo.',
-        colorHex: 0xc5bfae,
-        accentColor: '#c5bfae',
-        bgGradient: ['#001133', '#0066ff'],
-        icon: 'fa-cloud',
-        subComponents: ['AWS / GCP Multi-cloud', 'On-Premise Private Cluster', 'Edge Computing Nodes', 'Kubernetes Containers'],
-        yBase: -5.2
+        shortName: 'INFRASTRUCTURE',
+        subtitle: 'Cloud, Contenedores & CI/CD',
+        colorHex: 0x08b8d8,
+        accentColor: '#08b8d8',
+        sideLogoColor: '#c5bfae',
+        yBase: -5.6,
+        description: 'Aprovisionamiento de servidores, clústeres de orquestación, seguridad perimetral y pipelines automatizados.',
+        techs: ['AWS', 'Kubernetes', 'Docker', 'Terraform', 'Cloudflare', 'GitHub Actions'],
+        metric1: '99.999%',
+        metric2: 'Multi-Region'
     },
     {
         id: 'dat',
         step: 2,
         number: '02',
         name: 'DATA',
-        subtitle: 'Database · Search · Storage · Cache',
-        desc: 'Persistencia distribuida, almacenamiento relacional, búsquedas indexadas y caché rápido.',
-        relation: 'Reside sobre la Infraestructura física o virtualizada para garantizar alta disponibilidad.',
-        colorHex: 0xc5bfae,
-        accentColor: '#c5bfae',
-        bgGradient: ['#280f54', '#8b5cf6'],
-        icon: 'fa-database',
-        subComponents: ['PostgreSQL / Distributed DB', 'ElasticSearch / Vector DB', 'Object Storage (S3)', 'Redis Memory Cache'],
-        yBase: -2.6
+        shortName: 'DATA',
+        subtitle: 'Persistencia, Búsqueda & Caché',
+        colorHex: 0x08b8d8,
+        accentColor: '#08b8d8',
+        sideLogoColor: '#c5bfae',
+        yBase: -2.8,
+        description: 'Almacenamiento relacional y NoSQL, indexación de datos de alto rendimiento y capas de caché en memoria.',
+        techs: ['PostgreSQL', 'Redis', 'Elasticsearch', 'MongoDB', 'DynamoDB', 'S3'],
+        metric1: '4 ms',
+        metric2: '99.999%'
     },
     {
         id: 'dom',
         step: 3,
         number: '03',
         name: 'DOMAIN',
-        subtitle: 'Business Rules · Entities · Processes',
-        desc: 'Núcleo de inteligencia operativa. Contiene el modelo de dominio agnóstico a la tecnología.',
-        relation: 'Utiliza las abstracciones de persistencia de la capa de Datos para guardar estado.',
-        colorHex: 0xc5bfae,
-        accentColor: '#c5bfae',
-        bgGradient: ['#023824', '#10b981'],
-        icon: 'fa-diagram-project',
-        subComponents: ['Core Entities', 'Domain Logic & Invariants', 'Business State Machines', 'Domain Events'],
-        yBase: 0.0
+        shortName: 'DOMAIN',
+        subtitle: 'Reglas de Negocio & Lógica DDD',
+        colorHex: 0x08b8d8,
+        accentColor: '#08b8d8',
+        sideLogoColor: '#c5bfae',
+        yBase: 0.0,
+        description: 'Núcleo puro de las reglas del negocio, entidades independientes de infraestructura y algoritmos centrales.',
+        techs: ['Domain Driven Design', 'Event Sourcing', 'Clean Architecture', 'Core Engines'],
+        metric1: '8 ms',
+        metric2: '100%'
     },
     {
         id: 'app',
         step: 4,
         number: '04',
         name: 'APPLICATION',
-        subtitle: 'Services · Workflows · Integrations',
-        desc: 'Orquestación de procesos de negocio, comunicación asíncrona y microservicios.',
-        relation: 'Ejecuta operaciones consultando las Reglas de Dominio y disparando eventos.',
-        colorHex: 0xc5bfae,
-        accentColor: '#c5bfae',
-        bgGradient: ['#002244', '#0099ff'],
-        icon: 'fa-gears',
-        subComponents: ['Microservices Mesh', 'Workflow Orchestration', 'Event Bus / Webhooks', 'Third-party Integrations'],
-        yBase: 2.6
+        shortName: 'APPLICATION',
+        subtitle: 'Flujos, Integraciones & Servicios',
+        colorHex: 0x08b8d8,
+        accentColor: '#08b8d8',
+        sideLogoColor: '#c5bfae',
+        yBase: 2.8,
+        description: 'Orquestación de procesos de negocio, coordinación de microservicios, APIs RESTful y gestión de eventos.',
+        techs: ['Node.js', 'Go', 'NestJS', 'Kafka', 'RabbitMQ', 'REST APIs'],
+        metric1: '35 ms',
+        metric2: '99.95%'
     },
     {
         id: 'exp',
         step: 5,
         number: '05',
         name: 'EXPERIENCE',
-        subtitle: 'Web · Mobile · API · WhatsApp',
-        desc: 'Punto de contacto e interacción multicanal con usuarios y clientes finales.',
-        relation: 'Interactúa directamente con la capa de Aplicación a través de contratos de API seguros.',
-        colorHex: 0xc5bfae,
-        accentColor: '#c5bfae',
-        bgGradient: ['#003852', '#00f3ff'],
-        icon: 'fa-mobile-screen-button',
-        subComponents: ['Web App (React/Next.js)', 'Mobile Native (iOS/Android)', 'REST & GraphQL APIs', 'WhatsApp Business Bot'],
-        yBase: 5.2
+        shortName: 'EXPERIENCE',
+        subtitle: 'Canales, UI/UX & API Gateway',
+        colorHex: 0x08b8d8,
+        accentColor: '#08b8d8',
+        sideLogoColor: '#c5bfae',
+        yBase: 5.6,
+        description: 'Gestión de la interfaz del usuario final, optimización de renderizado, aplicaciones web/móviles y gateway de entrada.',
+        techs: ['React', 'Next.js', 'React Native', 'Tailwind CSS', 'GraphQL', 'CDN Edge'],
+        metric1: '14 ms',
+        metric2: '99.99%'
     }
 ]
 
@@ -89,98 +95,46 @@ function createLayerTopTexture(layer) {
     canvas.height = 1024
     const ctx = canvas.getContext('2d')
 
-    const grad = ctx.createLinearGradient(0, 0, 1024, 1024)
-    grad.addColorStop(0, layer.bgGradient[0])
-    grad.addColorStop(1, layer.bgGradient[1])
-    ctx.fillStyle = grad
+    // Base turquoise sólida
+    ctx.fillStyle = '#08b8d8'
     ctx.fillRect(0, 0, 1024, 1024)
 
-    ctx.strokeStyle = layer.accentColor
-    ctx.lineWidth = 16
-    ctx.strokeRect(20, 20, 984, 984)
+    // Borde de contraste
+    ctx.strokeStyle = '#02242e'
+    ctx.lineWidth = 28
+    ctx.strokeRect(28, 28, 968, 968)
 
-    ctx.fillStyle = '#ffffff'
-    const cornerSize = 40
-    ctx.fillRect(20, 20, cornerSize, cornerSize)
-    ctx.fillRect(1024 - 20 - cornerSize, 20, cornerSize, cornerSize)
-    ctx.fillRect(20, 1024 - 20 - cornerSize, cornerSize, cornerSize)
-    ctx.fillRect(1024 - 20 - cornerSize, 1024 - 20 - cornerSize, cornerSize, cornerSize)
-
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.4)'
-    ctx.fillRect(60, 60, 180, 80)
-    ctx.font = 'bold 48px "JetBrains Mono", sans-serif'
-    ctx.fillStyle = layer.accentColor
-    ctx.fillText(layer.number, 80, 118)
-
-    ctx.save()
-    ctx.translate(512, 512)
-    ctx.strokeStyle = '#ffffff'
-    ctx.lineWidth = 24
-    ctx.lineCap = 'round'
-    ctx.lineJoin = 'round'
-
-    if (layer.id === 'inf') {
+    // Cyber grid overlay
+    ctx.strokeStyle = 'rgba(2, 36, 46, 0.22)'
+    ctx.lineWidth = 4
+    for (let i = 80; i < 1024; i += 80) {
         ctx.beginPath()
-        ctx.moveTo(-110, 45)
-        ctx.lineTo(110, 45)
-        ctx.bezierCurveTo(155, 45, 175, 10, 160, -25)
-        ctx.bezierCurveTo(175, -75, 130, -110, 85, -100)
-        ctx.bezierCurveTo(65, -135, 15, -135, -10, -110)
-        ctx.bezierCurveTo(-50, -130, -100, -90, -90, -45)
-        ctx.bezierCurveTo(-140, -40, -155, 15, -110, 45)
-        ctx.closePath()
-        ctx.stroke()
-    } else if (layer.id === 'dat') {
-        for (let y of [-100, 0, 100]) {
-            ctx.beginPath()
-            ctx.ellipse(0, y, 140, 50, 0, 0, Math.PI * 2)
-            ctx.stroke()
-        }
-        ctx.beginPath()
-        ctx.moveTo(-140, -100); ctx.lineTo(-140, 100)
-        ctx.moveTo(140, -100); ctx.lineTo(140, 100)
-        ctx.stroke()
-    } else if (layer.id === 'dom') {
-        ctx.beginPath()
-        for (let i = 0; i < 6; i++) {
-            const angle = (i * Math.PI) / 3
-            const x = 150 * Math.cos(angle)
-            const y = 150 * Math.sin(angle)
-            if (i === 0) ctx.moveTo(x, y)
-            else ctx.lineTo(x, y)
-        }
-        ctx.closePath()
-        ctx.stroke()
-        ctx.beginPath()
-        ctx.arc(0, 0, 40, 0, Math.PI * 2)
-        ctx.fillStyle = layer.accentColor
-        ctx.fill()
-    } else if (layer.id === 'app') {
-        ctx.beginPath()
-        ctx.rect(-120, -120, 240, 240)
-        ctx.stroke()
-        ctx.beginPath()
-        ctx.arc(0, 0, 60, 0, Math.PI * 2)
-        ctx.stroke()
-    } else if (layer.id === 'exp') {
-        ctx.beginPath()
-        ctx.rect(-140, -100, 280, 180)
-        ctx.stroke()
-        ctx.beginPath()
-        ctx.moveTo(-60, 80); ctx.lineTo(60, 80)
-        ctx.moveTo(0, 80); ctx.lineTo(0, 120)
+        ctx.moveTo(i, 0); ctx.lineTo(i, 1024)
+        ctx.moveTo(0, i); ctx.lineTo(1024, i)
         ctx.stroke()
     }
-    ctx.restore()
 
-    ctx.textAlign = 'center'
-    ctx.font = 'bold 56px "Inter", sans-serif'
+    // Badge círculo con número
+    ctx.fillStyle = '#02242e'
+    ctx.beginPath()
+    ctx.arc(140, 140, 60, 0, Math.PI * 2)
+    ctx.fill()
+
     ctx.fillStyle = '#ffffff'
-    ctx.fillText(layer.name, 512, 820)
+    ctx.font = '900 50px sans-serif'
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.fillText(layer.number, 140, 140)
 
-    ctx.font = '500 32px "Inter", sans-serif'
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)'
-    ctx.fillText(layer.subtitle, 512, 880)
+    // Nombre de la capa
+    ctx.fillStyle = '#02242e'
+    ctx.font = '900 68px sans-serif'
+    ctx.fillText(layer.shortName || layer.name, 512, 780)
+
+    // Subtítulo
+    ctx.font = 'bold 36px sans-serif'
+    ctx.fillStyle = '#05475a'
+    ctx.fillText(layer.subtitle, 512, 850)
 
     const texture = new THREE.CanvasTexture(canvas)
     texture.needsUpdate = true
@@ -189,92 +143,122 @@ function createLayerTopTexture(layer) {
 
 function createSideLogoTexture(layer) {
     const canvas = document.createElement('canvas')
-    canvas.width = 512
-    canvas.height = 256
+    canvas.width = 1024
+    canvas.height = 320
     const ctx = canvas.getContext('2d')
 
-    // Fondo beige mate para el lateral del bloque
-    ctx.fillStyle = '#c5bfae'
-    ctx.fillRect(0, 0, 512, 256)
+    ctx.clearRect(0, 0, 1024, 320)
+
+    // Gradiente metálico oscuro (steel graphite) para el logo
+    const logoGradient = ctx.createLinearGradient(400, 40, 624, 280)
+    logoGradient.addColorStop(0, '#273549')
+    logoGradient.addColorStop(0.3, '#0f172a')
+    logoGradient.addColorStop(0.7, '#020617')
+    logoGradient.addColorStop(1, '#1e293b')
 
     ctx.save()
-    ctx.translate(256, 128)
-    ctx.scale(0.75, 0.75)
+    ctx.translate(512, 160)
 
-    // Gradiente metálico oscuro para el logo en relieve
-    const metalGrad = ctx.createLinearGradient(-100, -100, 100, 100)
-    metalGrad.addColorStop(0, '#273549')
-    metalGrad.addColorStop(0.5, '#07111e')
-    metalGrad.addColorStop(1, '#020617')
-    ctx.fillStyle = metalGrad
-    ctx.strokeStyle = '#020617'
-    ctx.lineWidth = 8
+    ctx.strokeStyle = logoGradient
+    ctx.fillStyle = logoGradient
+    ctx.lineWidth = 18
     ctx.lineCap = 'round'
     ctx.lineJoin = 'round'
 
-    if (layer.id === 'inf') {
+    // Drop shadow para efecto relieve metálico
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.45)'
+    ctx.shadowBlur = 12
+    ctx.shadowOffsetX = 3
+    ctx.shadowOffsetY = 5
+
+    if (layer.id === 'exp') {
+        // Experience: monitor de escritorio + dispositivo móvil
+        ctx.strokeRect(-120, -70, 140, 95)
         ctx.beginPath()
-        ctx.moveTo(-90, 35)
-        ctx.lineTo(90, 35)
-        ctx.bezierCurveTo(125, 35, 140, 10, 130, -15)
-        ctx.bezierCurveTo(140, -55, 105, -85, 70, -75)
-        ctx.bezierCurveTo(55, -105, 15, -105, -5, -85)
-        ctx.bezierCurveTo(-35, -100, -75, -70, -70, -35)
-        ctx.bezierCurveTo(-110, -30, -120, 10, -90, 35)
-        ctx.closePath()
-        ctx.fill()
+        ctx.moveTo(-50, 25); ctx.lineTo(-50, 60)
+        ctx.moveTo(-85, 60); ctx.lineTo(-15, 60)
         ctx.stroke()
-    } else if (layer.id === 'dat') {
-        for (let y of [-60, 0, 60]) {
-            ctx.beginPath()
-            ctx.ellipse(0, y, 110, 35, 0, 0, Math.PI * 2)
-            ctx.fill()
-            ctx.stroke()
-        }
+
+        ctx.fillRect(35, -45, 65, 110)
+        ctx.strokeRect(35, -45, 65, 110)
+        ctx.beginPath()
+        ctx.arc(67, 50, 6, 0, Math.PI * 2)
+        ctx.fillStyle = '#64748b'
+        ctx.fill()
+    } else if (layer.id === 'app') {
+        // Application: nodos de microservicios interconectados
+        ctx.beginPath()
+        ctx.arc(-55, -20, 52, 0, Math.PI * 2)
+        ctx.stroke()
+        ctx.beginPath()
+        ctx.arc(-55, -20, 20, 0, Math.PI * 2)
+        ctx.fill()
+
+        ctx.beginPath()
+        ctx.arc(55, 20, 40, 0, Math.PI * 2)
+        ctx.stroke()
+        ctx.beginPath()
+        ctx.arc(55, 20, 15, 0, Math.PI * 2)
+        ctx.fill()
     } else if (layer.id === 'dom') {
+        // Domain: modelo core hexagonal
         ctx.beginPath()
         for (let i = 0; i < 6; i++) {
             const angle = (i * Math.PI) / 3
-            const x = 110 * Math.cos(angle)
-            const y = 110 * Math.sin(angle)
+            const x = 75 * Math.cos(angle)
+            const y = 75 * Math.sin(angle)
             if (i === 0) ctx.moveTo(x, y)
             else ctx.lineTo(x, y)
         }
         ctx.closePath()
-        ctx.fill()
         ctx.stroke()
-    } else if (layer.id === 'app') {
+
         ctx.beginPath()
-        ctx.rect(-90, -90, 180, 180)
+        ctx.arc(0, 0, 24, 0, Math.PI * 2)
         ctx.fill()
+    } else if (layer.id === 'dat') {
+        // Data: cilindros de BD multi-tier
+        for (let y of [-50, 0, 50]) {
+            ctx.beginPath()
+            ctx.ellipse(0, y, 95, 26, 0, 0, Math.PI * 2)
+            ctx.stroke()
+        }
+        ctx.beginPath()
+        ctx.moveTo(-95, -50); ctx.lineTo(-95, 50)
+        ctx.moveTo(95, -50); ctx.lineTo(95, 50)
         ctx.stroke()
-    } else if (layer.id === 'exp') {
+    } else if (layer.id === 'inf') {
+        // Infrastructure: cloud computing — silueta alta y equilibrada
         ctx.beginPath()
-        ctx.rect(-100, -70, 200, 130)
-        ctx.fill()
+        ctx.moveTo(-90, 45)
+        ctx.lineTo(90, 45)
+        ctx.bezierCurveTo(125, 45, 120, -20, 60, -20)
+        ctx.bezierCurveTo(50, -85, -20, -85, -35, -25)
+        ctx.bezierCurveTo(-90, -25, -125, 45, -90, 45)
+        ctx.closePath()
         ctx.stroke()
     }
 
     ctx.restore()
-    return new THREE.CanvasTexture(canvas)
+
+    const texture = new THREE.CanvasTexture(canvas)
+    texture.needsUpdate = true
+    return texture
 }
 
 export function createLayers(scene) {
     const layerMeshes = []
 
-    const blockWidth = 7.5
-    const blockHeight = 1.4
-    const blockDepth = 7.5
-    const radius = 0.4
+    const blockWidth = 8, blockHeight = 1.3, blockDepth = 8
+    const bevelSize = 0.1, bevelThickness = 0.1
 
     LAYERS_DATA.forEach((layerData, idx) => {
         const layerGroup = new THREE.Group()
         layerGroup.userData = { ...layerData, index: idx }
 
+        // Rectángulo redondeado
         const shape = new THREE.Shape()
-        const w = blockWidth / 2
-        const d = blockDepth / 2
-        const r = radius
+        const w = blockWidth / 2, d = blockDepth / 2, r = 0.5
 
         shape.moveTo(-w + r, -d)
         shape.lineTo(w - r, -d)
@@ -290,72 +274,77 @@ export function createLayers(scene) {
             steps: 1,
             depth: blockHeight,
             bevelEnabled: true,
-            bevelThickness: 0.1,
-            bevelSize: 0.1,
-            bevelSegments: 3
+            bevelThickness: bevelThickness,
+            bevelSize: bevelSize,
+            bevelSegments: 4
         }
 
         const blockGeo = new THREE.ExtrudeGeometry(shape, extrudeSettings)
         blockGeo.rotateX(-Math.PI / 2)
         blockGeo.center()
 
-        const topTexture = createLayerTopTexture(layerData)
-        const sideLogoTexture = createSideLogoTexture(layerData)
+        // Cuerpo: beige mate / tapa: turquoise base
+        const sideMat = new THREE.MeshStandardMaterial({
+            color: 0xc5bfae,
+            metalness: 0.05,
+            roughness: 0.5
+        })
 
-        const materials = [
-            new THREE.MeshStandardMaterial({
-                color: 0xc5bfae,
-                metalness: 0.05,
-                roughness: 0.45,
-                map: sideLogoTexture
-            }),
-            new THREE.MeshStandardMaterial({
-                color: 0xffffff,
-                metalness: 0.1,
-                roughness: 0.3,
-                map: topTexture
-            })
-        ]
+        const topBaseMat = new THREE.MeshStandardMaterial({
+            color: 0x08b8d8,
+            metalness: 0.1,
+            roughness: 0.3
+        })
 
-        const blockMesh = new THREE.Mesh(blockGeo, materials)
+        const blockMesh = new THREE.Mesh(blockGeo, [topBaseMat, sideMat])
         blockMesh.castShadow = true
         blockMesh.receiveShadow = true
         layerGroup.add(blockMesh)
 
-        const handleGeo = new THREE.CylinderGeometry(0.08, 0.08, 1.2, 16)
-        const handleMat = new THREE.MeshStandardMaterial({ color: 0x07111e, metalness: 0.9, roughness: 0.1 })
-
-        const leftHandle = new THREE.Mesh(handleGeo, handleMat)
-        leftHandle.position.set(-w - 0.1, 0, 0)
-        layerGroup.add(leftHandle)
-
-        const rightHandle = new THREE.Mesh(handleGeo, handleMat)
-        rightHandle.position.set(w + 0.1, 0, 0)
-        layerGroup.add(rightHandle)
-
-        const glowGeo = new THREE.PlaneGeometry(8.5, 8.5)
-        const canvasGlow = document.createElement('canvas')
-        canvasGlow.width = 256; canvasGlow.height = 256
-        const gCtx = canvasGlow.getContext('2d')
-        const gRad = gCtx.createRadialGradient(128, 128, 10, 128, 128, 128)
-        gRad.addColorStop(0, '#08b8d8')
-        gRad.addColorStop(0.5, '#08b8d855')
-        gRad.addColorStop(1, 'transparent')
-        gCtx.fillStyle = gRad
-        gCtx.fillRect(0, 0, 256, 256)
-
-        const glowTex = new THREE.CanvasTexture(canvasGlow)
-        const glowMat = new THREE.MeshBasicMaterial({
-            map: glowTex,
+        // Overlay de la cara superior (textura nítida por encima del bloque)
+        const topTexture = createLayerTopTexture(layerData)
+        const topPlaneGeo = new THREE.PlaneGeometry(blockWidth - 0.2, blockDepth - 0.2)
+        const topPlaneMat = new THREE.MeshStandardMaterial({
+            map: topTexture,
             transparent: true,
-            blending: THREE.AdditiveBlending,
-            depthWrite: false
+            roughness: 0.3,
+            metalness: 0.1
+        })
+        const topPlaneMesh = new THREE.Mesh(topPlaneGeo, topPlaneMat)
+        topPlaneMesh.rotation.x = -Math.PI / 2
+        topPlaneMesh.position.y = blockHeight / 2 + bevelThickness + 0.005
+        layerGroup.add(topPlaneMesh)
+
+        // Badges de logo laterales (frente, derecha, atrás, izquierda)
+        const sideLogoTex = createSideLogoTexture(layerData)
+        const logoBadgeGeo = new THREE.PlaneGeometry(5.2, 1.15)
+        const logoBadgeMat = new THREE.MeshBasicMaterial({
+            map: sideLogoTex,
+            transparent: true,
+            depthWrite: false,
+            side: THREE.DoubleSide
         })
 
-        const glowMesh = new THREE.Mesh(glowGeo, glowMat)
-        glowMesh.rotation.x = -Math.PI / 2
-        glowMesh.position.y = -blockHeight / 2 - 0.05
-        layerGroup.add(glowMesh)
+        const faceOffset = blockDepth / 2 + bevelSize + 0.02
+
+        const frontLogo = new THREE.Mesh(logoBadgeGeo, logoBadgeMat)
+        frontLogo.position.set(0, 0, faceOffset)
+        layerGroup.add(frontLogo)
+
+        const rightLogo = new THREE.Mesh(logoBadgeGeo, logoBadgeMat)
+        rightLogo.position.set(faceOffset, 0, 0)
+        rightLogo.rotation.y = Math.PI / 2
+        layerGroup.add(rightLogo)
+
+        const backLogo = new THREE.Mesh(logoBadgeGeo, logoBadgeMat)
+        backLogo.position.set(0, 0, -faceOffset)
+        backLogo.rotation.y = Math.PI
+        layerGroup.add(backLogo)
+
+        const leftLogo = new THREE.Mesh(logoBadgeGeo, logoBadgeMat)
+        leftLogo.position.set(-faceOffset, 0, 0)
+        leftLogo.rotation.y = -Math.PI / 2
+        layerGroup.add(leftLogo)
 
         layerGroup.position.set(0, layerData.yBase, 0)
         scene.add(layerGroup)
@@ -365,27 +354,52 @@ export function createLayers(scene) {
     return layerMeshes
 }
 
+function forEachMaterial(object3D, fn) {
+    const seen = new Set()
+    object3D.traverse(child => {
+        if (!child.material) return
+        const mats = Array.isArray(child.material) ? child.material : [child.material]
+        mats.forEach(mat => {
+            if (!seen.has(mat)) {
+                seen.add(mat)
+                fn(mat)
+            }
+        })
+    })
+}
+
 export function updateLayersVisibility(layerMeshes, currentStep, explodeFactor) {
     layerMeshes.forEach((mesh, idx) => {
         const layerStep = idx + 1
         const isVisible = layerStep <= currentStep || currentStep >= 6
+        mesh.userData.shown = isVisible
 
-        let targetY = LAYERS_DATA[idx].yBase * (1 + explodeFactor)
+        const targetY = LAYERS_DATA[idx].yBase * (1 + explodeFactor)
 
-        if (!isVisible) {
-            targetY += 15
+        if (isVisible) {
+            if (!mesh.visible) {
+                // Efecto "drop": aparece desde arriba y se acopla
+                mesh.visible = true
+                mesh.position.y = targetY + 4
+            }
+            gsap.to(mesh.position, { y: targetY, duration: 0.6, ease: 'back.out(1.2)', overwrite: 'auto' })
+
+            forEachMaterial(mesh, mat => {
+                mat.transparent = true
+                gsap.to(mat, { opacity: 1, duration: 0.4, overwrite: 'auto' })
+            })
+        } else {
+            gsap.to(mesh.position, { y: targetY + 5, duration: 0.4, ease: 'power2.in', overwrite: 'auto' })
+
+            forEachMaterial(mesh, mat => {
+                mat.transparent = true
+                gsap.to(mat, {
+                    opacity: 0,
+                    duration: 0.3,
+                    overwrite: 'auto',
+                    onComplete: () => { if (!mesh.userData.shown) mesh.visible = false }
+                })
+            })
         }
-
-        gsap.to(mesh.position, {
-            y: targetY,
-            duration: 0.8,
-            ease: "power2.out"
-        })
-
-        mesh.visible = true
-        mesh.children[0].material.forEach(mat => {
-            mat.transparent = true
-            gsap.to(mat, { opacity: isVisible ? 1 : 0.1, duration: 0.5 })
-        })
     })
 }
