@@ -34,6 +34,11 @@ const frame3DFor = (mode) => (mode === '3d' ? FRAME3D_MAIN : FRAME3D_MINI)
 
 let currentFrame3D = FRAME3D_MAIN
 
+// Niebla de la escena (toggle temporal con tecla F)
+function createFog() {
+    return new THREE.FogExp2(0x030712, 0.025)
+}
+
 // State del orquestador
 let scene, camera, renderer, controls
 let layerMeshes = []
@@ -55,7 +60,7 @@ export function initThree() {
 
     scene = new THREE.Scene()
     scene.background = new THREE.Color(0x030712)
-    scene.fog = new THREE.FogExp2(0x030712, 0.025)
+    scene.fog = createFog()
 
     const rect = container.getBoundingClientRect()
     const cw = rect.width || window.innerWidth
@@ -198,6 +203,12 @@ function onCanvasClick(event) {
 }
 
 function bindAppEvents() {
+    // Toggle de niebla con la tecla F (prueba temporal: comparar on/off al vuelo)
+    window.addEventListener('keydown', (e) => {
+        if (e.key.toLowerCase() !== 'f') return
+        scene.fog = scene.fog ? null : createFog()
+    })
+
     window.addEventListener('app-step-changed', (e) => {
         currentStep = e.detail.step
         updateLayerVisibility()
