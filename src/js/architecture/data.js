@@ -23,7 +23,7 @@ export const NODES = [
 
   // INFRAESTRUCTURA — bloques a los costados, hacia el ala superior
   { id: 'compute', cat: 'infrastructure', label: 'Cómputo', x: -160, y: 0, z: -65, w: 60, d: 45, h: 30 },
-  { id: 'network', cat: 'infrastructure', label: 'Redes', x: 160, y: 0, z: -65, w: 60, d: 45, h: 30 },
+  { id: 'network', cat: 'infrastructure', label: 'Redes', x: 160, y: 0, z: -40, w: 60, d: 45, h: 30 },
 ]
 
 export const CONNECTIONS = [
