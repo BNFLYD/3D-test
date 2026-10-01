@@ -12,7 +12,7 @@ const CYAN = '#00f3ff'
 const FRAME_MAIN = {
   angleX: 0.25,
   angleY: -0.25,
-  zoom: 2,
+  zoom: 1.7,
   panX: -90,
   panY: -45,
 }
@@ -21,7 +21,7 @@ const FRAME_MAIN = {
 const FRAME_MINI = {
   angleX: 0.25,
   angleY: -0.25,
-  zoom: 1.1,
+  zoom: 0.7,
   panX: 0,
   panY: 0,
 }
