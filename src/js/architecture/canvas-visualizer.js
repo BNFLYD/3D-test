@@ -70,6 +70,9 @@ export function initCanvasVisualizer({ container, canvas }) {
     secFade: 0,      // fade-in del sobre de seguridad
     reduced: false,
     time: 0,
+    // Draw-in progresivo por conexión (0 = sin trazar, 1 = completa)
+    connProgress: new Array(CONNECTIONS.length).fill(0),
+    aiProgress: new Array(AI_CAPABILITIES.length).fill(0),
   }
 
   let dpr = 1
@@ -161,27 +164,46 @@ export function initCanvasVisualizer({ container, canvas }) {
     CONNECTIONS.forEach((conn, ci) => {
       const fromNode = NODES.find(n => n.id === conn.from)
       const toNode = NODES.find(n => n.id === conn.to)
-      if (!fromNode || !toNode) return
-      if (!nodeVisible(fromNode) || !nodeVisible(toNode)) return
+      if (!fromNode || !toNode || !nodeVisible(fromNode) || !nodeVisible(toNode)) {
+        s.connProgress[ci] = 0 // reset: al re-entrar hace replay
+        return
+      }
+
+      // Draw-in: la línea se conecta entre sus capas (~0.5s)
+      s.connProgress[ci] = s.reduced ? 1 : Math.min(s.connProgress[ci] + 0.033, 1)
 
       const fn = nodeAt(fromNode, t)
       const tn = nodeAt(toNode, t)
       const p1 = project(fn.x, fn.y, fn.z + (fn.h || 10), s.angleX, s.angleY, s.zoom)
       const p2 = project(tn.x, tn.y, tn.z + (tn.h || 10), s.angleX, s.angleY, s.zoom)
-      const pulse = s.reduced ? 0 : ((s.time * 0.15 + ci * 0.3) % 1)
-      drawConnectionLine(ctx, p1, p2, { pulse, active: s.step >= 8 })
+      // Flujo de datos continuo: fase base + stagger por conexión
+      const flow = s.reduced ? 0 : (s.time * 0.28 + ci * 0.15) % 1
+      drawConnectionLine(ctx, p1, p2, {
+        flow,
+        progress: s.connProgress[ci],
+        active: true,
+      })
     })
 
     if (showAI) {
-      AI_CAPABILITIES.forEach((ai) => {
+      AI_CAPABILITIES.forEach((ai, aiIdx) => {
         const targetNode = NODES.find(n => n.id === ai.target)
-        if (!targetNode || !nodeVisible(targetNode)) return
+        if (!targetNode || !nodeVisible(targetNode)) {
+          s.aiProgress[aiIdx] = 0
+          return
+        }
+        s.aiProgress[aiIdx] = s.reduced ? 1 : Math.min(s.aiProgress[aiIdx] + 0.033, 1)
+
         const tn = nodeAt(targetNode, t)
         const aiNode = nodeAt(ai, t)
-        const p1 = project(aiNode.x, aiNode.y, aiNode.z, s.angleX, s.angleY, s.zoom)
+        const p1 = project(aiNode.x, aiNode.y, aiNode.z + (ai.h || 10), s.angleX, s.angleY, s.zoom)
         const p2 = project(tn.x, tn.y, tn.z + (tn.h || 10), s.angleX, s.angleY, s.zoom)
-        const pulse = s.reduced ? 0 : ((s.time * 0.12 + 0.5) % 1)
-        drawConnectionLine(ctx, p1, p2, { pulse, isAI: true })
+        const flow = s.reduced ? 0 : (s.time * 0.22 + aiIdx * 0.25) % 1
+        drawConnectionLine(ctx, p1, p2, {
+          flow,
+          progress: s.aiProgress[aiIdx],
+          isAI: true,
+        })
       })
     }
 
