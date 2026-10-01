@@ -8,14 +8,14 @@
     <!-- Google Fonts & Font Awesome Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #07090e;
-            color: #e2e8f0;
+            font-family: 'IBM Plex Sans', sans-serif;
+            background-color: #0a0a0a;
+            color: #f2f2f2;
             overflow-x: hidden;
             user-select: none;
         }
@@ -24,56 +24,86 @@
             width: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: #0d111a;
+            background: #101719;
         }
         ::-webkit-scrollbar-thumb {
-            background: #1e293b;
-            border-radius: 3px;
+            background: #1a2225;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #00f3ff;
+            background: #00d4ff;
         }
 
+        /* ── Firma HOD: paneles y botones cuadrados ── */
         .glass-panel {
-            background: rgba(15, 20, 32, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            background: rgba(16, 23, 25, 0.92);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4);
         }
 
         .glass-btn {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            transition: all 0.2s ease;
         }
 
         .glass-btn:hover {
-            background: rgba(0, 243, 255, 0.15);
-            border-color: rgba(0, 243, 255, 0.4);
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+            background: color-mix(in srgb, #00d4ff 10%, transparent);
+            border-color: rgba(0, 212, 255, 0.5);
+            color: #65e8ff;
         }
 
         .glass-btn.active {
-            background: rgba(0, 243, 255, 0.25);
-            border-color: #00f3ff;
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+            background: color-mix(in srgb, #00d4ff 14%, transparent);
+            border-color: #00d4ff;
+            color: #65e8ff;
+        }
+
+        /* ── Navbar flotante estilo HOD Software ── */
+        .hod-navbar {
+            position: fixed;
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: min(calc(100% - 28px), 1240px);
+            z-index: 100;
+            padding: 8px 12px 8px 16px;
+            background: linear-gradient(135deg, color-mix(in srgb, #00d4ff 6%, transparent), transparent 64%);
+            backdrop-filter: blur(18px) saturate(1.15);
+            -webkit-backdrop-filter: blur(18px) saturate(1.15);
+            border: 1px solid color-mix(in srgb, #00d4ff 24%, transparent);
+            box-shadow: 0 10px 34px rgba(0, 0, 0, 0.16);
+        }
+
+        .hod-brand {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #f2f2f2;
+        }
+
+        .hod-eyebrow {
+            font-family: 'Monaspace Argon', monospace;
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
         }
 
         input[type=range] {
             -webkit-appearance: none;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 9999px;
+            border-radius: 0;
             height: 6px;
         }
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
             height: 18px;
             width: 18px;
-            border-radius: 50%;
-            background: #00f3ff;
-            box-shadow: 0 0 10px #00f3ff;
+            border-radius: 0;
+            background: #00d4ff;
+            box-shadow: 0 0 10px #00d4ff;
             cursor: pointer;
             transition: transform 0.1s;
         }
@@ -118,7 +148,7 @@
         }
     </style>
 </head>
-<body x-data="architectureApp()" x-init="init()" class="h-full w-full bg-[#07090e] text-slate-100 overflow-hidden select-none">
+<body x-data="architectureApp()" x-init="init()" class="h-full w-full bg-[#0a0a0a] text-[#f2f2f2] overflow-hidden select-none">
 
     <!-- Slot principal: aloja la vista activa (3D o 2D) -->
     <div id="main-viewport" class="absolute inset-0 z-[1]">
@@ -129,33 +159,29 @@
     <!-- UI Overlay Layer -->
     <div class="relative z-10 flex flex-col justify-between h-screen w-full pointer-events-none p-4 md:p-6">
 
-        <!-- Top Header Navigation -->
-        <header class="flex items-center justify-between pointer-events-auto">
+        <!-- Navbar flotante estilo HOD Software -->
+        <header class="hod-navbar flex items-center justify-between pointer-events-auto">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-400 p-[1px] shadow-lg shadow-cyan-500/20">
-                    <div class="w-full h-full bg-[#0d111a] rounded-[11px] flex items-center justify-center">
-                        <i class="fa-solid fa-cubes-stacked text-cyan-400 text-lg"></i>
-                    </div>
+                <div class="w-9 h-9 bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center">
+                    <i class="fa-solid fa-cubes-stacked text-white text-sm"></i>
                 </div>
-                <div>
-                    <h1 class="font-bold text-lg md:text-xl tracking-tight text-white flex items-center gap-2">
-                        HOD <span class="text-xs px-2 py-0.5 rounded-full bg-cyan-950/80 text-cyan-400 border border-cyan-500/30 font-mono">SYSTEM ARCHITECTURE</span>
-                    </h1>
-                    <p class="text-xs text-slate-400 hidden sm:block">Interactive 3D Layer Stack & Scroll Visualizer</p>
+                <div class="leading-tight">
+                    <h1 class="hod-brand">HOD System Architecture</h1>
+                    <p class="hod-eyebrow text-[9px] text-[#718087] hidden sm:block mt-0.5">Interactive 3D Layer Stack Visualizer</p>
                 </div>
             </div>
 
             <!-- Controls Header Right -->
             <div class="flex items-center gap-2">
-                <button @click="resetCamera" title="Restablecer Cámara" class="glass-btn px-3 py-2 rounded-lg text-xs font-medium text-slate-300 flex items-center gap-2">
-                    <i class="fa-solid fa-video text-cyan-400"></i>
+                <button @click="resetCamera" title="Restablecer Cámara" class="glass-btn hod-eyebrow px-3 py-2 text-[11px] font-medium text-[#8a8a8a] flex items-center gap-2">
+                    <i class="fa-solid fa-video text-[#00d4ff]"></i>
                     <span class="hidden md:inline">Restablecer Vista</span>
                 </button>
-                <button @click="isAutoRotating = !isAutoRotating" :class="['glass-btn p-2 rounded-lg text-slate-300 w-9 h-9 flex items-center justify-center', isAutoRotating ? 'active' : '']" title="Auto Rotación">
-                    <i class="fa-solid fa-rotate text-cyan-400"></i>
+                <button @click="isAutoRotating = !isAutoRotating" :class="['glass-btn p-2 text-[#8a8a8a] w-9 h-9 flex items-center justify-center', isAutoRotating ? 'active' : '']" title="Auto Rotación">
+                    <i class="fa-solid fa-rotate text-[#00d4ff]"></i>
                 </button>
-                <button @click="showInfoModal = true" title="Documentación de Arquitectura" class="glass-btn p-2 rounded-lg text-slate-300 w-9 h-9 flex items-center justify-center">
-                    <i class="fa-solid fa-circle-info text-cyan-400"></i>
+                <button @click="showInfoModal = true" title="Documentación de Arquitectura" class="glass-btn p-2 text-[#8a8a8a] w-9 h-9 flex items-center justify-center">
+                    <i class="fa-solid fa-circle-info text-[#00d4ff]"></i>
                 </button>
             </div>
         </header>
@@ -168,28 +194,28 @@
 
                 <!-- Header flotante (fuera de la card, sin recuadro) -->
                 <div class="flex items-center justify-center gap-2.5">
-                    <span id="drawer-badge" class="w-8 h-8 rounded-full text-xs font-mono font-bold flex items-center justify-center" :class="{
+                    <span id="drawer-badge" class="hod-eyebrow px-2 py-1 text-[11px] font-bold flex items-center justify-center border" :class="{
                         'bg-[#0066ff]/20 text-[#0066ff] border border-[#0066ff]/30': currentStep === 1,
                         'bg-[#8b5cf6]/20 text-[#8b5cf6] border border-[#8b5cf6]/30': currentStep === 2,
                         'bg-[#10b981]/20 text-[#10b981] border border-[#10b981]/30': currentStep === 3,
                         'bg-[#00d2ff]/20 text-[#00d2ff] border border-[#00d2ff]/30': currentStep === 4,
-                        'bg-[#00f3ff]/20 text-[#00f3ff] border border-[#00f3ff]/30': currentStep === 5,
+                        'bg-[#00d4ff]/20 text-[#00d4ff] border border-[#00d4ff]/30': currentStep === 5,
                         'bg-[#f59e0b]/20 text-[#f59e0b] border border-[#f59e0b]/30': currentStep === 6,
                         'bg-[#ec4899]/20 text-[#ec4899] border border-[#ec4899]/30': currentStep === 7,
-                        'bg-[#00f3ff]/20 text-[#00f3ff] border border-[#00f3ff]/30': currentStep === 8
+                        'bg-[#00d4ff]/20 text-[#00d4ff] border border-[#00d4ff]/30': currentStep === 8
                     }" x-text="steps.find(s => s.id === currentStep)?.number || '01'"></span>
                     <h3 id="drawer-title" class="font-bold text-base text-white text-center" x-text="steps.find(s => s.id === currentStep)?.label || 'Experience Layer'"></h3>
                 </div>
 
                 <!-- Card con miniatura -->
-                <div id="detail-drawer" class="glass-panel p-4 rounded-2xl h-[52.65vh] max-h-[72vh] flex flex-col pointer-events-auto">
+                <div id="detail-drawer" class="glass-panel p-4 h-[52.65vh] max-h-[72vh] flex flex-col pointer-events-auto">
 
                     <!-- Contenido textual via HTMX (oculto, preservado) -->
                     <div id="drawer-content" class="flex-1 overflow-y-auto" hidden></div>
 
                     <!-- Miniatura de la vista inactiva: click = toggle entre vistas -->
                     <div id="mini-viewport" @click="viewMode = viewMode === '3d' ? '2d' : '3d'" title="Cambiar de vista"
-                         class="flex-1 min-h-0 rounded-xl overflow-hidden border border-white/10 cursor-pointer hover:border-cyan-500/40 transition-all relative bg-[#0a0d14]">
+                         class="flex-1 min-h-0 overflow-hidden border border-white/10 cursor-pointer hover:border-[#00d4ff]/50 transition-all relative bg-[#0a0d14]">
                         <!-- 2D Canvas (isométrico, cámara fija) — inicia como miniatura -->
                         <div id="canvas2d-container" class="w-full h-full">
                             <canvas id="canvas2d" class="w-full h-full cursor-grab active:cursor-grabbing touch-none"></canvas>
@@ -201,22 +227,22 @@
 
         <!-- Card de descripción de la etapa activa (arriba de la footbar) -->
         <div class="pointer-events-auto mb-3">
-            <div class="glass-panel rounded-2xl px-5 py-3 flex items-center justify-center min-h-16">
-                <p class="text-xs text-slate-300 leading-relaxed text-center" x-text="steps.find(s => s.id === currentStep)?.desc"></p>
+            <div class="glass-panel px-5 py-3 flex items-center justify-center min-h-16">
+                <p class="text-xs text-[#d8e3e5] leading-relaxed text-center" x-text="steps.find(s => s.id === currentStep)?.desc"></p>
             </div>
         </div>
 
         <!-- Bottom Floating Controls Bar: prev/next + timeline clickeable -->
-        <footer class="pointer-events-auto glass-panel p-3 px-5 rounded-2xl">
+        <footer class="pointer-events-auto glass-panel p-3 px-5">
             <div class="flex items-center gap-4">
 
                 <!-- Prev / Next -->
                 <div class="flex items-center gap-2">
-                    <button @click="prevStep()" title="Etapa anterior" class="glass-btn w-9 h-9 rounded-lg text-slate-300 flex items-center justify-center">
-                        <i class="fa-solid fa-chevron-left text-cyan-400"></i>
+                    <button @click="prevStep()" title="Etapa anterior" class="glass-btn w-9 h-9 text-[#8a8a8a] flex items-center justify-center">
+                        <i class="fa-solid fa-chevron-left text-[#00d4ff]"></i>
                     </button>
-                    <button @click="nextStep()" title="Etapa siguiente" class="glass-btn w-9 h-9 rounded-lg text-slate-300 flex items-center justify-center">
-                        <i class="fa-solid fa-chevron-right text-cyan-400"></i>
+                    <button @click="nextStep()" title="Etapa siguiente" class="glass-btn w-9 h-9 text-[#8a8a8a] flex items-center justify-center">
+                        <i class="fa-solid fa-chevron-right text-[#00d4ff]"></i>
                     </button>
                 </div>
 
@@ -229,16 +255,16 @@
                                     class="relative shrink-0 mx-auto w-3 h-3 rounded-full border transition-all duration-300"
                                     :class="[
                                         currentStep === step.id
-                                            ? 'bg-cyan-400 border-cyan-300 shadow-[0_0_12px_2px_rgba(0,243,255,0.5)] scale-125'
+                                            ? 'bg-[#00d4ff] border-[#65e8ff] shadow-[0_0_12px_2px_rgba(0,212,255,0.5)] scale-125'
                                             : step.id < currentStep
-                                                ? 'bg-cyan-400/60 border-cyan-500/50 hover:bg-cyan-300'
-                                                : 'bg-transparent border-slate-600 hover:border-cyan-500/60'
+                                                ? 'bg-[#00d4ff]/60 border-[#00d4ff]/50 hover:bg-[#65e8ff]'
+                                                : 'bg-transparent border-slate-600 hover:border-[#00d4ff]/60'
                                     ]">
                             </button>
 
                             <!-- Segmento de línea entre nodos (no va después del último) -->
                             <div x-show="idx < steps.length - 1" class="flex-1 h-px mx-1 transition-colors duration-300"
-                                 :class="step.id < currentStep ? 'bg-cyan-400/60' : 'bg-white/10'"></div>
+                                 :class="step.id < currentStep ? 'bg-[#00d4ff]/60' : 'bg-white/10'"></div>
                         </div>
                     </template>
                 </div>
@@ -248,53 +274,53 @@
 
     <!-- Info Modal -->
     <div x-show="showInfoModal" x-transition.opacity class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4" @click.self="showInfoModal = false" style="display: none;">
-        <div class="glass-panel p-6 rounded-2xl max-w-2xl w-full border border-cyan-500/30 flex flex-col gap-4 max-h-[85vh] overflow-y-auto">
+        <div class="glass-panel p-6 max-w-2xl w-full border border-[#00d4ff]/30 flex flex-col gap-4 max-h-[85vh] overflow-y-auto">
             <div class="flex items-center justify-between pb-3 border-b border-white/10">
-                <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-sitemap text-cyan-400"></i> HOD System Architecture Specification
+                <h2 class="hod-brand text-base flex items-center gap-2">
+                    <i class="fa-solid fa-sitemap text-[#00d4ff]"></i> HOD System Architecture Specification
                 </h2>
-                <button @click="showInfoModal = false" class="text-slate-400 hover:text-white p-1">
-                    <i class="fa-solid fa-xmark text-lg"></i>
+                <button @click="showInfoModal = false" class="w-8 h-8 border border-white/15 text-[#718087] hover:text-[#65e8ff] hover:border-[#00d4ff]/50 transition-colors flex items-center justify-center" aria-label="Cerrar">
+                    <i class="fa-solid fa-xmark text-base"></i>
                 </button>
             </div>
 
-            <div class="text-xs text-slate-300 space-y-3 leading-relaxed">
+            <div class="text-xs text-[#d8e3e5] space-y-3 leading-relaxed">
                 <p>
                     La arquitectura de sistemas <strong>HOD</strong> está diseñada modularmente en capas horizontales independientes y acopladas de manera flexible. Permite alta escalabilidad, seguridad transversal y capacidades de Inteligencia Artificial contextuales.
                 </p>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-3 my-2">
-                    <div class="p-3 rounded-xl bg-slate-900/80 border border-white/5">
-                        <div class="font-bold text-blue-400 mb-1">01 — Infrastructure</div>
-                        <div class="text-[11px] text-slate-400">Nube híbrida (AWS/GCP/Azure), On-Premise y Nodos Edge. Base física y virtual.</div>
+                    <div class="p-3 bg-[#101719]/80 border border-white/5">
+                        <div class="hod-eyebrow text-[11px] text-blue-400 mb-1">01 — Infrastructure</div>
+                        <div class="text-[11px] text-[#8a8a8a]">Nube híbrida (AWS/GCP/Azure), On-Premise y Nodos Edge. Base física y virtual.</div>
                     </div>
-                    <div class="p-3 rounded-xl bg-slate-900/80 border border-white/5">
-                        <div class="font-bold text-purple-400 mb-1">02 — Data</div>
-                        <div class="text-[11px] text-slate-400">Bases de datos SQL/NoSQL, Motor de Búsqueda, Almacenamiento de Objetos y Caches Redis.</div>
+                    <div class="p-3 bg-[#101719]/80 border border-white/5">
+                        <div class="hod-eyebrow text-[11px] text-purple-400 mb-1">02 — Data</div>
+                        <div class="text-[11px] text-[#8a8a8a]">Bases de datos SQL/NoSQL, Motor de Búsqueda, Almacenamiento de Objetos y Caches Redis.</div>
                     </div>
-                    <div class="p-3 rounded-xl bg-slate-900/80 border border-white/5">
-                        <div class="font-bold text-emerald-400 mb-1">03 — Domain</div>
-                        <div class="text-[11px] text-slate-400">Reglas de negocio puras, Entidades y Procesos core de la organización. Independiente de la infraestructura.</div>
+                    <div class="p-3 bg-[#101719]/80 border border-white/5">
+                        <div class="hod-eyebrow text-[11px] text-emerald-400 mb-1">03 — Domain</div>
+                        <div class="text-[11px] text-[#8a8a8a]">Reglas de negocio puras, Entidades y Procesos core de la organización. Independiente de la infraestructura.</div>
                     </div>
-                    <div class="p-3 rounded-xl bg-slate-900/80 border border-white/5">
-                        <div class="font-bold text-cyan-400 mb-1">04 — Application</div>
-                        <div class="text-[11px] text-slate-400">Microservicios, Workflows orquestados e Integraciones de terceros. Ejecuta la lógica operativa.</div>
+                    <div class="p-3 bg-[#101719]/80 border border-white/5">
+                        <div class="hod-eyebrow text-[11px] text-cyan-400 mb-1">04 — Application</div>
+                        <div class="text-[11px] text-[#8a8a8a]">Microservicios, Workflows orquestados e Integraciones de terceros. Ejecuta la lógica operativa.</div>
                     </div>
-                    <div class="p-3 rounded-xl bg-slate-900/80 border border-white/5">
-                        <div class="font-bold text-cyan-400 mb-1">05 — Experience</div>
-                        <div class="text-[11px] text-slate-400">Web, Mobile, REST/GraphQL APIs, WhatsApp integrations. Interacción directa con el usuario final.</div>
+                    <div class="p-3 bg-[#101719]/80 border border-white/5">
+                        <div class="hod-eyebrow text-[11px] text-cyan-400 mb-1">05 — Experience</div>
+                        <div class="text-[11px] text-[#8a8a8a]">Web, Mobile, REST/GraphQL APIs, WhatsApp integrations. Interacción directa con el usuario final.</div>
                     </div>
-                    <div class="p-3 rounded-xl bg-slate-900/80 border border-amber-500/30">
-                        <div class="font-bold text-amber-400 mb-1">Security (Transversal)</div>
-                        <div class="text-[11px] text-slate-400">Cifrado Zero-Trust, IAM, OAuth2/OIDC, WAF y auditoría continua envolviendo la pila completa.</div>
+                    <div class="p-3 bg-[#101719]/80 border border-amber-500/30">
+                        <div class="hod-eyebrow text-[11px] text-amber-400 mb-1">Security (Transversal)</div>
+                        <div class="text-[11px] text-[#8a8a8a]">Cifrado Zero-Trust, IAM, OAuth2/OIDC, WAF y auditoría continua envolviendo la pila completa.</div>
                     </div>
                 </div>
 
-                <div class="p-3 rounded-xl bg-pink-950/30 border border-pink-500/30">
-                    <div class="font-bold text-pink-400 mb-1 flex items-center gap-1.5">
+                <div class="p-3 bg-[#101719]/80 border border-pink-500/30">
+                    <div class="hod-eyebrow text-[11px] text-pink-400 mb-1 flex items-center gap-1.5">
                         <i class="fa-solid fa-sparkles"></i> AI — When It Makes Sense
                     </div>
-                    <div class="text-[11px] text-slate-300">
+                    <div class="text-[11px] text-[#d8e3e5]">
                         Capacidades de IA/ML integradas selectivamente conectándose a <strong>Data</strong> (Entrenamiento/RAG), <strong>Application</strong> (Agentes/Automatizaciones) y <strong>Experience</strong> (Asistentes e Interfaces inteligentes).
                     </div>
                 </div>

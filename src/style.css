@@ -1,21 +1,62 @@
 @import "tailwindcss";
 
+/* ── Design System HOD Software ─────────────────────────────── */
 :root {
-  --bg-base: #07090e;
-  --bg-elevated: #0d111a;
-  --bg-muted: #121722;
+  --bg-base: #0a0a0a;
+  --bg-elevated: #101719;           /* rgb(16, 23, 25) */
   --fg-primary: #f2f2f2;
   --fg-muted: #8a8a8a;
-  --accent: #00f3ff;
+  --fg-dim: #718087;
+  --accent: #00d4ff;
+  --accent-hover: #65e8ff;
+  --on-accent: #001014;
+  --border-soft: rgba(255, 255, 255, 0.12);
+  --border-accent: rgba(0, 212, 255, 0.3);
+  --panel-bg: rgba(16, 23, 25, 0.92);
+  --panel-bg-translucent: rgba(16, 23, 25, 0.72);
+}
+
+/* ── Fuentes ────────────────────────────────────────────────── */
+/* Montserrat (display) e IBM Plex Sans (cuerpo) via Google Fonts en index.html */
+
+@font-face {
+  font-family: 'Monaspace Argon';
+  src: url('/fonts/MonaspaceArgon-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Monaspace Argon';
+  src: url('/fonts/MonaspaceArgon-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Monaspace Argon';
+  src: url('/fonts/MonaspaceArgon-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Monaspace Argon';
+  src: url('/fonts/MonaspaceArgon-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
 }
 
 @theme inline {
   --color-bg-base: var(--bg-base);
   --color-bg-elevated: var(--bg-elevated);
-  --color-bg-muted: var(--bg-muted);
   --color-fg-primary: var(--fg-primary);
   --color-fg-muted: var(--fg-muted);
   --color-accent: var(--accent);
+  --font-display: 'Montserrat', sans-serif;
+  --font-mono: 'Monaspace Argon', monospace;
+  --font-sans: 'IBM Plex Sans', sans-serif;
 }
 
 * {
@@ -31,10 +72,17 @@ html {
 body {
   background-color: var(--bg-base);
   color: var(--fg-primary);
+  font-family: var(--font-sans);
   min-height: 100vh;
 }
 
 ::selection {
   background-color: var(--accent);
-  color: #000000;
+  color: var(--on-accent);
+}
+
+/* ── Firma HOD: todo cuadrado ───────────────────────────────── */
+.hod-squared,
+.hod-squared * {
+  border-radius: 0 !important;
 }
