@@ -2,28 +2,28 @@
 // Portado de next-test/src/components/architecture/data.js
 
 export const NODES = [
-  // INTERACCIÓN — dispuesto espacialmente sobre el centro del dominio
-  { id: 'web', cat: 'interface', label: 'Web', x: -140, y: -40, z: 110, w: 70, d: 50, h: 10 },
-  { id: 'mobile', cat: 'interface', label: 'Móvil', x: 0, y: 0, z: 115, w: 50, d: 50, h: 10 },
-  { id: 'api', cat: 'interface', label: 'APIs', x: 140, y: -40, z: 110, w: 70, d: 50, h: 10 },
+  // INTERACCIÓN — franja inferior del hexágono (z alto = abajo en pantalla)
+  { id: 'web', cat: 'interface', label: 'Web', x: -140, y: -40, z: 190, w: 70, d: 50, h: 10 },
+  { id: 'mobile', cat: 'interface', label: 'Móvil', x: 0, y: 0, z: 200, w: 50, d: 50, h: 10 },
+  { id: 'api', cat: 'interface', label: 'APIs', x: 140, y: -40, z: 190, w: 70, d: 50, h: 10 },
 
-  // APLICACIÓN — orbitando a altura media
-  { id: 'workflow', cat: 'application', label: 'Motor de Workflows', x: -100, y: 50, z: 60, w: 50, d: 35, h: 14 },
-  { id: 'orchestration', cat: 'application', label: 'Orquestación', x: 0, y: 0, z: 65, w: 55, d: 35, h: 14 },
-  { id: 'integration', cat: 'application', label: 'Integración', x: 100, y: 50, z: 60, w: 50, d: 35, h: 14 },
+  // APLICACIÓN — franja media inferior
+  { id: 'workflow', cat: 'application', label: 'Motor de Workflows', x: -100, y: 50, z: 100, w: 50, d: 35, h: 14 },
+  { id: 'orchestration', cat: 'application', label: 'Orquestación', x: 0, y: 0, z: 105, w: 55, d: 35, h: 14 },
+  { id: 'integration', cat: 'application', label: 'Integración', x: 100, y: 50, z: 100, w: 50, d: 35, h: 14 },
 
-  // DOMINIO — núcleo central
+  // DOMINIO — núcleo central (ancla del stack)
   { id: 'entities', cat: 'domain', label: 'Entidades', x: -60, y: 0, z: 10, w: 60, d: 50, h: 22 },
   { id: 'rules', cat: 'domain', label: 'Reglas de Negocio', x: 40, y: 0, z: 15, w: 60, d: 50, h: 22 },
 
-  // DATOS — cilindros detrás del núcleo
-  { id: 'database', cat: 'data', label: 'Bases de Datos', x: -90, y: 60, z: -50, r: 26, h: 30 },
-  { id: 'documents', cat: 'data', label: 'Documentos', x: 0, y: 80, z: -55, r: 22, h: 26 },
-  { id: 'cache', cat: 'data', label: 'Caché', x: 90, y: 60, z: -50, r: 22, h: 22 },
+  // DATOS — cilindros en la franja superior del hexágono (z bajo = arriba en pantalla)
+  { id: 'database', cat: 'data', label: 'Bases de Datos', x: -90, y: 60, z: -95, r: 26, h: 30 },
+  { id: 'documents', cat: 'data', label: 'Documentos', x: 0, y: 80, z: -105, r: 22, h: 26 },
+  { id: 'cache', cat: 'data', label: 'Caché', x: 90, y: 60, z: -95, r: 22, h: 22 },
 
-  // INFRAESTRUCTURA — bloques anchos a los costados
-  { id: 'compute', cat: 'infrastructure', label: 'Cómputo', x: -160, y: 0, z: -40, w: 60, d: 45, h: 30 },
-  { id: 'network', cat: 'infrastructure', label: 'Redes', x: 160, y: 0, z: -40, w: 60, d: 45, h: 30 },
+  // INFRAESTRUCTURA — bloques a los costados, hacia el ala superior
+  { id: 'compute', cat: 'infrastructure', label: 'Cómputo', x: -160, y: 0, z: -65, w: 60, d: 45, h: 30 },
+  { id: 'network', cat: 'infrastructure', label: 'Redes', x: 160, y: 0, z: -65, w: 60, d: 45, h: 30 },
 ]
 
 export const CONNECTIONS = [
