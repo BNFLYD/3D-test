@@ -61,7 +61,7 @@ export const AI_CAPABILITIES = [
     label: 'Búsqueda Semántica',
     target: 'database',
     desc: 'RAG y embeddings vectoriales sobre tus datos',
-    x: -90, y: 60, z: -100,
+    x: -90, y: 60, z: -140,
   },
   {
     id: 'assistant',
@@ -82,7 +82,7 @@ export const AI_CAPABILITIES = [
     label: 'Intel. de Documentos',
     target: 'documents',
     desc: 'Clasificación, indexación y extracción',
-    x: 50, y: 80, z: -100,
+    x: 50, y: 80, z: -140,
   },
 ]
 
