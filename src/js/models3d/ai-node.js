@@ -16,7 +16,9 @@ const TUBES = {
     dataColor: 0x38bdf8,
     experienceColor: 0x818cf8,
     endX: 3.8,   // penetración de la punta dentro del bloque (x mundo)
-    endZ: 0.5    // desplazamiento z de la punta (mundo)
+    endZ: 0.5,   // desplazamiento z de la punta (mundo)
+    bulge: 1.0,  // curvatura: apertura hacia afuera antes de doblar hacia la capa
+    dip: 0.9     // curvatura: swoosh vertical extra en el punto medio
 }
 
 // Tubo conector en coordenadas LOCALES del grupo: del centro del core a la capa destino.
@@ -28,7 +30,13 @@ function createConnectorTube(targetYWorld, color) {
         targetYWorld - AI_POSITION.y,
         TUBES.endZ - AI_POSITION.z
     )
-    const mid = new THREE.Vector3(end.x / 2, end.y / 2, end.z / 2)
+    // Punto medio desplazado: se abre hacia afuera (bulge) y hace un
+    // swoosh vertical (dip) antes de entrar a la capa
+    const mid = new THREE.Vector3(
+        end.x / 2 + TUBES.bulge,
+        end.y / 2 - TUBES.dip,
+        end.z / 2
+    )
 
     const curve = new THREE.CatmullRomCurve3([
         new THREE.Vector3(0, 0, 0), // centro del core (local)
