@@ -18,12 +18,13 @@ const TUBES = {
     opacity: 0.8,
     dataColor: 0x38bdf8,
     experienceColor: 0x818cf8,
-    endX: 3.8,   // penetración de la punta dentro del bloque (x mundo)
+    endX: 4.2,   // el tubo termina dentro del cuerpo del plug (x 3.95..4.35)
     endZ: 3.0,   // entrada sobre la cara lateral, del lado del nodo IA
                  // (fuera de la placa del logo, que ocupa z ∈ [-2.6, 2.6])
     bulge: 1.0,  // curvatura: apertura hacia afuera antes de doblar hacia la capa
     dip: 0.9,    // curvatura: swoosh direccional (sign según sentido del viaje)
-    tubularSegments: 32,
+    align: 1.1,  // largo del tramo recto coaxial antes del plug
+    tubularSegments: 40,
     radialSegments: 8
 }
 
@@ -46,9 +47,17 @@ function buildTubeGeometry(targetYWorld, groupY) {
         targetYWorld - groupY,
         TUBES.endZ - AI_POSITION.z
     )
+    // Punto de alineación: sobre el eje del plug (misma y,z que el final),
+    // a TUBES.align hacia afuera — el tramo final queda perfectamente
+    // horizontal y coaxial con el cilindro
+    const align = new THREE.Vector3(
+        end.x + TUBES.align,
+        end.y,
+        end.z
+    )
     // Swoosh direccional: el signo depende del sentido del viaje,
     // así Data y Experience quedan como espejos inversos
-    const mid = new THREE.Vector3(
+    const swoosh = new THREE.Vector3(
         end.x / 2 + TUBES.bulge,
         end.y / 2 + Math.sign(end.y) * TUBES.dip,
         end.z / 2
@@ -56,7 +65,8 @@ function buildTubeGeometry(targetYWorld, groupY) {
 
     const curve = new THREE.CatmullRomCurve3([
         new THREE.Vector3(0, 0, 0), // centro del core (local)
-        mid,
+        swoosh,
+        align,
         end
     ])
 
