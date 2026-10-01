@@ -1,7 +1,8 @@
 // HOD Models 3D - ai-node.js
 // Gemini Core: núcleo de IA autónomo — aura pulsante, cristal cuántico,
 // chispa interna, dos anillos neuronales en órbita y tubos conectores
-// hacia las capas Data y Experience.
+// hacia las capas Data y Experience. Los tubos quedan anclados a las
+// capas (posición fija en mundo) y se estiran siguiendo la flotación del core.
 
 import * as THREE from 'three'
 import { LAYERS_DATA } from './layers.js'
@@ -18,23 +19,26 @@ const TUBES = {
     endX: 3.8,   // penetración de la punta dentro del bloque (x mundo)
     endZ: 0.5,   // desplazamiento z de la punta (mundo)
     bulge: 1.0,  // curvatura: apertura hacia afuera antes de doblar hacia la capa
-    dip: 0.9     // curvatura: swoosh vertical extra en el punto medio
+    dip: 0.9,    // curvatura: swoosh direccional (sign según sentido del viaje)
+    tubularSegments: 32,
+    radialSegments: 8
 }
 
-// Tubo conector en coordenadas LOCALES del grupo: del centro del core a la capa destino.
-// (Los tubos viejos fallaban porque usaban coordenadas de mundo siendo hijos
-// del grupo posicionado — quedaban duplicados en el offset. Esto lo corrige.)
-function createConnectorTube(targetYWorld, color) {
+// Geometría del tubo en coords LOCALES del grupo.
+// El extremo de la capa se calcula relativo a groupY (posición flotante del
+// grupo) para que quede FIJO en mundo; el extremo del core (0,0,0) sigue al
+// cristal y la curva absorbe el movimiento estirándose.
+function buildTubeGeometry(targetYWorld, groupY) {
     const end = new THREE.Vector3(
         TUBES.endX - AI_POSITION.x,
-        targetYWorld - AI_POSITION.y,
+        targetYWorld - groupY,
         TUBES.endZ - AI_POSITION.z
     )
-    // Punto medio desplazado: se abre hacia afuera (bulge) y hace un
-    // swoosh vertical (dip) antes de entrar a la capa
+    // Swoosh direccional: el signo depende del sentido del viaje,
+    // así Data y Experience quedan como espejos inversos
     const mid = new THREE.Vector3(
         end.x / 2 + TUBES.bulge,
-        end.y / 2 - TUBES.dip,
+        end.y / 2 + Math.sign(end.y) * TUBES.dip,
         end.z / 2
     )
 
@@ -44,13 +48,19 @@ function createConnectorTube(targetYWorld, color) {
         end
     ])
 
-    const tubeGeo = new THREE.TubeGeometry(curve, 32, TUBES.radius, 8, false)
+    return new THREE.TubeGeometry(curve, TUBES.tubularSegments, TUBES.radius, TUBES.radialSegments, false)
+}
+
+function createConnectorTube(targetYWorld, color) {
     const tubeMat = new THREE.MeshBasicMaterial({
         color,
         transparent: true,
         opacity: TUBES.opacity
     })
-    return new THREE.Mesh(tubeGeo, tubeMat)
+    const tube = new THREE.Mesh(buildTubeGeometry(targetYWorld, AI_POSITION.y), tubeMat)
+    tube.userData.isConnectorTube = true
+    tube.userData.targetYWorld = targetYWorld
+    return tube
 }
 
 export function createAINode(scene) {
@@ -126,8 +136,16 @@ export function createAINode(scene) {
 export function animateAINode(aiNodeGroup) {
     const time = Date.now() * 0.002
 
-    // Flotación sutil
+    // Flotación sutil (se setea ANTES de reconstruir los tubos)
     aiNodeGroup.position.y = AI_POSITION.y + Math.sin(time) * 0.25
+
+    // Tubos: el extremo de la capa queda fijo en mundo (independiente del
+    // float del grupo); la curva absorbe el movimiento estirándose
+    aiNodeGroup.children.forEach(child => {
+        if (!child.userData.isConnectorTube) return
+        child.geometry.dispose()
+        child.geometry = buildTubeGeometry(child.userData.targetYWorld, aiNodeGroup.position.y)
+    })
 
     // Rotaciones propias
     aiNodeGroup.children[1].rotation.y += 0.012 // cristal
