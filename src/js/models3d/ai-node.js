@@ -1,73 +1,83 @@
 // HOD Models 3D - ai-node.js
-// Nodo central de IA: icosaedro pulsing + anillo torus + 3 tubos conectores
+// Gemini Core: núcleo de IA autónomo — aura pulsante, cristal cuántico,
+// chispa interna y dos anillos neuronales en órbita.
 
 import * as THREE from 'three'
+
+// Posición del nodo en la escena (al costado del stack de capas)
+const AI_POSITION = { x: 8, y: 2.5, z: 2 }
 
 export function createAINode(scene) {
     const aiNodeGroup = new THREE.Group()
 
-    const coreGeo = new THREE.IcosahedronGeometry(0.9, 2)
-    const coreMat = new THREE.MeshStandardMaterial({
-        color: 0xec4899,
-        emissive: 0xec4899,
-        emissiveIntensity: 0.6,
-        roughness: 0.2,
+    // Aura: campo de energía etéreo (wireframe pulsante)
+    const auraGeo = new THREE.SphereGeometry(1.6, 32, 32)
+    const auraMat = new THREE.MeshBasicMaterial({
+        color: 0x38bdf8,
+        transparent: true,
+        opacity: 0.15,
         wireframe: true
     })
-    const aiCore = new THREE.Mesh(coreGeo, coreMat)
-    aiNodeGroup.add(aiCore)
+    const auraMesh = new THREE.Mesh(auraGeo, auraMat)
+    aiNodeGroup.add(auraMesh) // children[0]
 
-    const ringGeo = new THREE.TorusGeometry(1.5, 0.04, 16, 100)
-    const ringMat = new THREE.MeshBasicMaterial({ color: 0x00f3ff })
-    const ring = new THREE.Mesh(ringGeo, ringMat)
-    ring.rotation.x = Math.PI / 3
-    aiNodeGroup.add(ring)
-
-    aiNodeGroup.position.set(8, 2.5, 2)
-
-    const targetYPositions = [5.2, 2.6, -2.6]
-    const colors = [0x00f3ff, 0x00d2ff, 0x8b5cf6]
-
-    targetYPositions.forEach((yPos, i) => {
-        const curve = new THREE.CatmullRomCurve3([
-            new THREE.Vector3(8, 2.5, 2),
-            new THREE.Vector3(5, (2.5 + yPos) / 2, 1),
-            new THREE.Vector3(3.8, yPos, 0)
-        ])
-
-        const tubeGeo = new THREE.TubeGeometry(curve, 32, 0.05, 8, false)
-        const tubeMat = new THREE.MeshBasicMaterial({
-            color: colors[i],
-            transparent: true,
-            opacity: 0.8
-        })
-        const tube = new THREE.Mesh(tubeGeo, tubeMat)
-        aiNodeGroup.add(tube)
+    // Cristal cuántico central
+    const coreGeo = new THREE.IcosahedronGeometry(0.95, 0)
+    const coreMat = new THREE.MeshPhysicalMaterial({
+        color: 0x0ea5e9,
+        emissive: 0x38bdf8,
+        emissiveIntensity: 0.8,
+        roughness: 0.1,
+        metalness: 0.9,
+        transmission: 0.6,
+        ior: 2.2,
+        transparent: true,
+        opacity: 0.95
     })
+    const aiCore = new THREE.Mesh(coreGeo, coreMat)
+    aiNodeGroup.add(aiCore) // children[1]
 
-    const canvasAI = document.createElement('canvas')
-    canvasAI.width = 512; canvasAI.height = 128
-    const aCtx = canvasAI.getContext('2d')
-    aCtx.fillStyle = '#ec4899'
-    aCtx.font = 'bold 38px "JetBrains Mono", sans-serif'
-    aCtx.textAlign = 'center'
-    aCtx.fillText('AI MODULE', 256, 50)
-    aCtx.fillStyle = '#ffffff'
-    aCtx.font = '24px "Inter", sans-serif'
-    aCtx.fillText('When It Makes Sense', 256, 90)
+    // Chispa de inteligencia interna
+    const sparkGeo = new THREE.SphereGeometry(0.35, 16, 16)
+    const sparkMat = new THREE.MeshBasicMaterial({ color: 0xffffff })
+    const sparkMesh = new THREE.Mesh(sparkGeo, sparkMat)
+    aiNodeGroup.add(sparkMesh) // children[2]
 
-    const aiLabelTex = new THREE.CanvasTexture(canvasAI)
-    const aiLabelMat = new THREE.MeshBasicMaterial({ map: aiLabelTex, transparent: true, side: THREE.DoubleSide })
-    const aiLabelMesh = new THREE.Mesh(new THREE.PlaneGeometry(3.5, 0.88), aiLabelMat)
-    aiLabelMesh.position.set(0, 1.8, 0)
-    aiNodeGroup.add(aiLabelMesh)
+    // Anillos neuronales en órbita
+    const ringGeo1 = new THREE.TorusGeometry(1.8, 0.035, 16, 100)
+    const ringMat1 = new THREE.MeshBasicMaterial({ color: 0x818cf8, transparent: true, opacity: 0.8 })
+    const ring1 = new THREE.Mesh(ringGeo1, ringMat1)
+    ring1.rotation.x = Math.PI / 3
+    aiNodeGroup.add(ring1) // children[3]
+
+    const ringGeo2 = new THREE.TorusGeometry(2.2, 0.03, 16, 100)
+    const ringMat2 = new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.6 })
+    const ring2 = new THREE.Mesh(ringGeo2, ringMat2)
+    ring2.rotation.y = Math.PI / 4
+    aiNodeGroup.add(ring2) // children[4]
+
+    aiNodeGroup.position.set(AI_POSITION.x, AI_POSITION.y, AI_POSITION.z)
+
+    // El nodo es decorativo: no intercepta el raycast (los clicks pasan a las capas)
+    aiNodeGroup.traverse(child => { child.raycast = () => {} })
 
     scene.add(aiNodeGroup)
     return aiNodeGroup
 }
 
 export function animateAINode(aiNodeGroup) {
-    aiNodeGroup.position.y = 2.5 + Math.sin(Date.now() * 0.002) * 0.3
-    aiNodeGroup.children[0].rotation.y += 0.01
-    aiNodeGroup.children[1].rotation.z += 0.015
+    const time = Date.now() * 0.002
+
+    // Flotación sutil
+    aiNodeGroup.position.y = AI_POSITION.y + Math.sin(time) * 0.25
+
+    // Rotaciones propias
+    aiNodeGroup.children[1].rotation.y += 0.012 // cristal
+    aiNodeGroup.children[1].rotation.x += 0.008
+    aiNodeGroup.children[3].rotation.z += 0.015 // anillo indigo
+    aiNodeGroup.children[4].rotation.x -= 0.02 // anillo sky
+
+    // Pulso del aura
+    const pulse = 1 + Math.sin(time * 3) * 0.08
+    aiNodeGroup.children[0].scale.set(pulse, pulse, pulse)
 }
