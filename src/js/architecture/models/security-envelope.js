@@ -11,7 +11,9 @@ const RADIUS_CAP = 280 // tope para no desbordar la miniatura
 function hexagonVertices(cx, cy, radius, z) {
   const verts = []
   for (let i = 0; i < 6; i++) {
-    const angle = (i * Math.PI) / 3 + Math.PI / 6
+    // Sin desfase: la CARA del hexágono (borde 240°-300°, midpoint 270°)
+    // mira al espectador; vértices a izquierda/derecha
+    const angle = (i * Math.PI) / 3
     verts.push({ x: cx + radius * Math.cos(angle), y: cy + radius * Math.sin(angle), z })
   }
   return verts
