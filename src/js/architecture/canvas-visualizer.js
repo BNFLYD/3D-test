@@ -143,6 +143,21 @@ export function initCanvasVisualizer({ container, canvas }) {
 
     const nodeVisible = (node) => !!vis[node.cat]
 
+    // Sobre de seguridad — pasada TRASERA (queda por detrás de nodos y conexiones)
+    if (showSecurity) {
+      s.secFade = s.reduced ? 1 : Math.min(s.secFade + 0.04, 1)
+      const activeNodes = NODES.filter(n => nodeVisible(n)).map(n => nodeAt(n, t))
+      if (activeNodes.length > 0) {
+        drawSecurityEnvelope(ctx, activeNodes, s.angleX, s.angleY, s.zoom, {
+          pad: SECURITY_ENVELOPE.padding,
+          progress: s.secFade,
+          layer: 'back',
+        })
+      }
+    } else {
+      s.secFade = 0
+    }
+
     CONNECTIONS.forEach((conn, ci) => {
       const fromNode = NODES.find(n => n.id === conn.from)
       const toNode = NODES.find(n => n.id === conn.to)
@@ -195,17 +210,16 @@ export function initCanvasVisualizer({ container, canvas }) {
       })
     }
 
-    if (showSecurity) {
-      s.secFade = s.reduced ? 1 : Math.min(s.secFade + 0.04, 1)
+    // Sobre de seguridad — pasada FRONTAL (por delante de los nodos: cara + aristas)
+    if (showSecurity && s.secFade > 0) {
       const activeNodes = NODES.filter(n => nodeVisible(n)).map(n => nodeAt(n, t))
       if (activeNodes.length > 0) {
         drawSecurityEnvelope(ctx, activeNodes, s.angleX, s.angleY, s.zoom, {
           pad: SECURITY_ENVELOPE.padding,
           progress: s.secFade,
+          layer: 'front',
         })
       }
-    } else {
-      s.secFade = 0
     }
 
     // Guías de rejilla (siempre visibles)
