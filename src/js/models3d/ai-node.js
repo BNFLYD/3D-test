@@ -1,8 +1,10 @@
 // HOD Models 3D - ai-node.js
 // Gemini Core: núcleo de IA autónomo — aura pulsante, cristal cuántico,
-// chispa interna, dos anillos neuronales en órbita y tubos conectores
-// hacia las capas Data y Experience. Los tubos quedan anclados a las
-// capas (posición fija en mundo) y se estiran siguiendo la flotación del core.
+// chispa interna, dos anillos neuronales en órbita, tubos conectores hacia
+// las capas Data y Experience (entrando por el costado, del lado del nodo,
+// fuera de la placa del logo) y plugs negros que disimulan la conexión.
+// Tubos y plugs quedan anclados a las capas (posición fija en mundo) y se
+// estiran/reposicionan siguiendo la flotación del core.
 
 import * as THREE from 'three'
 import { LAYERS_DATA } from './layers.js'
@@ -17,11 +19,21 @@ const TUBES = {
     dataColor: 0x38bdf8,
     experienceColor: 0x818cf8,
     endX: 3.8,   // penetración de la punta dentro del bloque (x mundo)
-    endZ: 0.5,   // desplazamiento z de la punta (mundo)
+    endZ: 3.0,   // entrada sobre la cara lateral, del lado del nodo IA
+                 // (fuera de la placa del logo, que ocupa z ∈ [-2.6, 2.6])
     bulge: 1.0,  // curvatura: apertura hacia afuera antes de doblar hacia la capa
     dip: 0.9,    // curvatura: swoosh direccional (sign según sentido del viaje)
     tubularSegments: 32,
     radialSegments: 8
+}
+
+// Config de los plugs (puertos de conexión negros en cada capa)
+const PLUG = {
+    radius: 0.075, // ≈ 1.5× el diámetro del tubo que recubren
+    length: 0.4,
+    protrude: 0.25, // cuánto sobresale de la cara
+    faceX: 4.1,     // cara lateral del bloque (±4 + bevel 0.1)
+    color: 0x000000
 }
 
 // Geometría del tubo en coords LOCALES del grupo.
@@ -61,6 +73,23 @@ function createConnectorTube(targetYWorld, color) {
     tube.userData.isConnectorTube = true
     tube.userData.targetYWorld = targetYWorld
     return tube
+}
+
+// Plug: cilindro negro horizontal (eje x) que sobresale apenas de la cara
+// lateral de la capa, centrado con el tubo — disimula la unión
+function createConnectorPlug(targetYWorld) {
+    const plugGeo = new THREE.CylinderGeometry(PLUG.radius, PLUG.radius, PLUG.length, 16)
+    const plugMat = new THREE.MeshStandardMaterial({ color: PLUG.color, roughness: 0.45, metalness: 0.05 })
+    const plug = new THREE.Mesh(plugGeo, plugMat)
+    plug.rotation.z = Math.PI / 2 // eje a lo largo de x (horizontal)
+    plug.position.set(
+        PLUG.faceX + PLUG.protrude - PLUG.length / 2 - AI_POSITION.x,
+        targetYWorld - AI_POSITION.y,
+        TUBES.endZ - AI_POSITION.z
+    )
+    plug.userData.isConnectorPlug = true
+    plug.userData.plugWorldY = targetYWorld
+    return plug
 }
 
 export function createAINode(scene) {
@@ -112,16 +141,18 @@ export function createAINode(scene) {
     ring2.rotation.y = Math.PI / 4
     aiNodeGroup.add(ring2) // children[4]
 
-    // Tubos conectores: core -> capa Data y core -> capa Experience
-    // (yBase dinámico desde LAYERS_DATA: si las capas se mueven, los tubos siguen)
+    // Tubos + plugs: core -> capa Data y core -> capa Experience
+    // (yBase dinámico desde LAYERS_DATA: si las capas se mueven, siguen solos)
     const yData = LAYERS_DATA.find(l => l.id === 'dat')?.yBase
     const yExperience = LAYERS_DATA.find(l => l.id === 'exp')?.yBase
 
     if (yData !== undefined) {
-        aiNodeGroup.add(createConnectorTube(yData, TUBES.dataColor)) // children[5]
+        aiNodeGroup.add(createConnectorTube(yData, TUBES.dataColor))
+        aiNodeGroup.add(createConnectorPlug(yData))
     }
     if (yExperience !== undefined) {
-        aiNodeGroup.add(createConnectorTube(yExperience, TUBES.experienceColor)) // children[6]
+        aiNodeGroup.add(createConnectorTube(yExperience, TUBES.experienceColor))
+        aiNodeGroup.add(createConnectorPlug(yExperience))
     }
 
     aiNodeGroup.position.set(AI_POSITION.x, AI_POSITION.y, AI_POSITION.z)
@@ -136,15 +167,18 @@ export function createAINode(scene) {
 export function animateAINode(aiNodeGroup) {
     const time = Date.now() * 0.002
 
-    // Flotación sutil (se setea ANTES de reconstruir los tubos)
+    // Flotación sutil (se setea ANTES de reconstruir tubos / anclar plugs)
     aiNodeGroup.position.y = AI_POSITION.y + Math.sin(time) * 0.25
 
-    // Tubos: el extremo de la capa queda fijo en mundo (independiente del
-    // float del grupo); la curva absorbe el movimiento estirándose
+    // Tubos: el extremo de la capa queda fijo en mundo; la curva absorbe el
+    // movimiento estirándose. Plugs: contra-anclados a la capa (fijos en mundo)
     aiNodeGroup.children.forEach(child => {
-        if (!child.userData.isConnectorTube) return
-        child.geometry.dispose()
-        child.geometry = buildTubeGeometry(child.userData.targetYWorld, aiNodeGroup.position.y)
+        if (child.userData.isConnectorTube) {
+            child.geometry.dispose()
+            child.geometry = buildTubeGeometry(child.userData.targetYWorld, aiNodeGroup.position.y)
+        } else if (child.userData.isConnectorPlug) {
+            child.position.y = child.userData.plugWorldY - aiNodeGroup.position.y
+        }
     })
 
     // Rotaciones propias
