@@ -59,6 +59,9 @@ export function drawSecurityEnvelope(ctx, nodes, angleX, angleY, zoom, opts = {}
   const widen = depth * 0.25
   rx = Math.min(rx + widen, RADIUS_CAP)
   rz = Math.min(rz + widen, RADIUS_CAP)
+  // Proporción: el alto no baja del 90% del ancho para que el hexágono
+  // no se lea achatado (aristas laterales ≈ aristas de piso/techo)
+  rz = Math.max(rz, rx * 0.9)
 
   const projFront = hexagonFace(cx, cz, rx, rz, frontY)
     .map(v => project(v.x, v.y, v.z, angleX, angleY, zoom))
