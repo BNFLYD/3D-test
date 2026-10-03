@@ -28,6 +28,13 @@ const FRAME_MINI = {
 
 const frameFor = (mode) => (mode === '2d' ? FRAME_MAIN : FRAME_MINI)
 
+// Watermark del logo en la fase final (detrás del sobre de seguridad)
+const LOGO = {
+  scale: 0.6,              // alto relativo al canvas
+  alpha: 0.15,             // opacidad del watermark
+  aspect: 760.9 / 888.8,   // ratio w/h del viewBox del SVG
+}
+
 // Mapeo de los pasos de Alpine (1-8) a flags de visibilidad acumulativa
 // Narrativa bottom-up: 1 Infrastructure · 2 Data · 3 Domain · 4 Application ·
 // 5 Experience · 6 Security · 7 AI · 8 Completo
@@ -54,6 +61,12 @@ export function initCanvasVisualizer({ container, canvas }) {
   const ctx = canvas.getContext('2d')
   if (!ctx) return
 
+  // Logo HOD para el watermark de la fase final (carga única)
+  const logoImage = new Image()
+  let logoLoaded = false
+  logoImage.onload = () => { logoLoaded = true }
+  logoImage.src = '/logo.svg'
+
   const engine = {
     angleX: FRAME_MINI.angleX,
     angleY: FRAME_MINI.angleY,
@@ -68,6 +81,7 @@ export function initCanvasVisualizer({ container, canvas }) {
     step: 1,         // paso del state Alpine (1-8)
     explode: 1,      // factor radial (1 = neutral)
     secFade: 0,      // fade-in del sobre de seguridad
+    logoFade: 0,     // fade-in del watermark del logo (fase final)
     reduced: false,
     time: 0,
     // Draw-in progresivo por conexión (0 = sin trazar, 1 = completa)
@@ -145,6 +159,23 @@ export function initCanvasVisualizer({ container, canvas }) {
     const showSecurity = vis.security
 
     const nodeVisible = (node) => !!vis[node.cat]
+
+    // Watermark del logo en la fase final — lo más atrás de todo (detrás del sobre)
+    if (s.step === 8) {
+      s.logoFade = s.reduced ? 1 : Math.min(s.logoFade + 0.02, 1)
+    } else {
+      s.logoFade = 0
+    }
+    if (s.logoFade > 0 && logoLoaded) {
+      // Alto relativo al canvas, con clamp para canvases angostos
+      const lh = Math.min(h * LOGO.scale, w / LOGO.aspect)
+      const lw = lh * LOGO.aspect
+      ctx.save()
+      ctx.globalCompositeOperation = 'screen'
+      ctx.globalAlpha = s.logoFade * LOGO.alpha
+      ctx.drawImage(logoImage, -lw / 2, -lh / 2, lw, lh)
+      ctx.restore()
+    }
 
     // Sobre de seguridad — pasada TRASERA (queda por detrás de nodos y conexiones)
     if (showSecurity) {
