@@ -12,6 +12,17 @@ const RADIUS_CAP = 340 // tope de seguridad para no desbordar la miniatura
 // (pointy-top), alineados con la silueta isométrica del logo HOD
 const HEX_ROTATION = Math.PI / 6
 
+// Logo HOD: pared del fondo de la celda (fase final, contain-fit a la cara trasera)
+const LOGO = {
+  alpha: 0.15,             // opacidad del watermark
+  aspect: 760.9 / 888.8,   // ratio w/h del viewBox del SVG
+}
+
+const logoImage = new Image()
+let logoLoaded = false
+logoImage.onload = () => { logoLoaded = true }
+logoImage.src = '/logo.svg'
+
 // Vértices del hexágono en el plano x/z
 function hexagonFace(cx, cz, rx, rz, y) {
   const verts = []
@@ -27,7 +38,7 @@ function hexagonFace(cx, cz, rx, rz, y) {
 }
 
 export function drawSecurityEnvelope(ctx, nodes, angleX, angleY, zoom, opts = {}) {
-  const { pad = 35, progress = 0, layer = 'front' } = opts
+  const { pad = 35, progress = 0, layer = 'front', logo = 0 } = opts
   if (progress <= 0) return
 
   // Centroide de la silueta (x/z = ancho y altura en pantalla)
@@ -78,6 +89,36 @@ export function drawSecurityEnvelope(ctx, nodes, angleX, angleY, zoom, opts = {}
 
   if (layer === 'back') {
     // ---- Pasada TRASERA (dibujar ANTES de los nodos) ----
+
+    // Pared del fondo: logo contain-fit al bbox proyectado de la cara trasera,
+    // ANTES del trazo del hexágono → queda detrás de todo el sobre
+    if (logo > 0 && logoLoaded) {
+      let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity
+      projBack.forEach(p => {
+        if (p.x < minX) minX = p.x
+        if (p.x > maxX) maxX = p.x
+        if (p.y < minY) minY = p.y
+        if (p.y > maxY) maxY = p.y
+      })
+      const bboxW = maxX - minX
+      const bboxH = maxY - minY
+      // Contain-fit preservando el aspecto del SVG (sin deformar):
+      // mismo alto exacto que la cara trasera, ancho proporcional
+      let lh = bboxH
+      let lw = lh * LOGO.aspect
+      if (lw > bboxW) {
+        lw = bboxW
+        lh = lw / LOGO.aspect
+      }
+      const ccx = (minX + maxX) / 2
+      const ccy = (minY + maxY) / 2
+      ctx.save()
+      ctx.globalCompositeOperation = 'screen'
+      ctx.globalAlpha = logo * LOGO.alpha
+      ctx.drawImage(logoImage, ccx - lw / 2, ccy - lh / 2, lw, lh)
+      ctx.restore()
+    }
+
     ctx.globalAlpha = progress * 0.35
     ctx.lineWidth = 0.9
     ctx.beginPath()
