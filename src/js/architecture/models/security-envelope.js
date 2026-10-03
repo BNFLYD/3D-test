@@ -16,6 +16,8 @@ const HEX_ROTATION = Math.PI / 6
 const LOGO = {
   alpha: 0.15,             // opacidad del watermark
   aspect: 760.9 / 888.8,   // ratio w/h del viewBox del SVG
+  nudgeX: -0.05,           // -5% del ancho → izquierda
+  nudgeY: -0.05,           // -5% del alto → arriba
 }
 
 const logoImage = new Image()
@@ -115,7 +117,10 @@ export function drawSecurityEnvelope(ctx, nodes, angleX, angleY, zoom, opts = {}
       ctx.save()
       ctx.globalCompositeOperation = 'screen'
       ctx.globalAlpha = logo * LOGO.alpha
-      ctx.drawImage(logoImage, ccx - lw / 2, ccy - lh / 2, lw, lh)
+      ctx.drawImage(logoImage,
+        ccx - lw / 2 + lw * LOGO.nudgeX,
+        ccy - lh / 2 + lh * LOGO.nudgeY,
+        lw, lh)
       ctx.restore()
     }
 
