@@ -8,11 +8,15 @@ import { CYAN, CYAN_DIM } from './palette.js'
 
 const RADIUS_CAP = 340 // tope de seguridad para no desbordar la miniatura
 
-// Vértices del hexágono en el plano x/z (sin desfase: cara plana arriba en pantalla)
+// Rotación del hexágono: +30° deja los vértices arriba/abajo en pantalla
+// (pointy-top), alineados con la silueta isométrica del logo HOD
+const HEX_ROTATION = Math.PI / 6
+
+// Vértices del hexágono en el plano x/z
 function hexagonFace(cx, cz, rx, rz, y) {
   const verts = []
   for (let i = 0; i < 6; i++) {
-    const angle = (i * Math.PI) / 3
+    const angle = (i * Math.PI) / 3 + HEX_ROTATION
     verts.push({
       x: cx + rx * Math.cos(angle),
       y,
@@ -105,7 +109,7 @@ export function drawSecurityEnvelope(ctx, nodes, angleX, angleY, zoom, opts = {}
     ctx.setLineDash([])
 
     // Etiqueta: arriba a la derecha de la cara frontal
-    const labelP = projFront[5] // vértice 300° = arriba-derecha en pantalla
+    const labelP = projFront[5] // vértice 330° = arriba-derecha en pantalla
     ctx.globalAlpha = progress * 0.9
     ctx.font = `600 ${Math.max(9, 10 * zoom)}px 'JetBrains Mono', monospace`
     ctx.fillStyle = CYAN
