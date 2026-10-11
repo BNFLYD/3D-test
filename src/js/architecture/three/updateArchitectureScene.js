@@ -69,10 +69,27 @@ export function updateArchitectureScene(graph, progress, time, reduced = false) 
   const timeline = clamp01(progress) * 9
   const overview = 1 - smooth(timeline / 1.1)
   const complete = smooth((timeline - 7.55) / 0.45)
+  // ── Glyph (logo) ─────────────────────────────────────────────────────
+  // Transparente durante toda la construcción de las capas: materializa al
+  // llegar a la penúltima etapa (IA, stage 7), con fade entre los targets de
+  // Security (6.5) y AI (7.5). Mientras es transparente no escribe depth para
+  // no ocluir invisiblemente el núcleo central; al completarse vuelve a
+  // comportarse como sólido.
+  const glyphOpacity = smooth(timeline - STAGE.ai + 0.5)
+  const glyphLayer = graph.layers.glyph
+  glyphLayer.group.visible = glyphOpacity > 0.005
+  glyphLayer.frontMaterial.opacity = glyphOpacity
+  glyphLayer.sideMaterial.opacity = glyphOpacity
+  glyphLayer.edgeMaterial.opacity = glyphOpacity * 0.62
+  const glyphSolid = glyphOpacity >= 1
+  glyphLayer.frontMaterial.depthWrite = glyphSolid
+  glyphLayer.sideMaterial.depthWrite = glyphSolid
+
   const glyphStrength = 0.48 + Math.max(overview, complete) * 0.52
-  graph.layers.glyph.frontMaterial.color.copy(DIM_CYAN).lerp(CYAN, glyphStrength)
-  graph.layers.glyph.sideMaterial.emissive.set('#001116')
-  graph.layers.glyph.sideMaterial.emissiveIntensity = 0.12 + complete * 0.18
+  glyphLayer.frontMaterial.color.copy(DIM_CYAN).lerp(CYAN, glyphStrength)
+  glyphLayer.sideMaterial.emissive.set('#001116')
+  glyphLayer.sideMaterial.emissiveIntensity = 0.12 + complete * 0.18
+  // ─────────────────────────────────────────────────────────────────────
 
   const infrastructureProgress = Math.max(overview * 0.12, layerProgress(timeline, STAGE.infrastructure, reduced))
   const dataProgress = Math.max(overview * 0.18, layerProgress(timeline, STAGE.data, reduced))

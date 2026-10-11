@@ -121,13 +121,16 @@ export function createArchitectureScene({ geometries, sourceBounds }) {
   const nodeMap = new Map()
 
   const glyph = createLayer('glyph')
-  const glyphFront = new THREE.MeshBasicMaterial({ color: CYAN, toneMapped: false })
-  const glyphSide = new THREE.MeshStandardMaterial({ color: '#071b21', roughness: 0.92, metalness: 0.04 })
-  const glyphEdges = new THREE.LineBasicMaterial({ color: '#064958', transparent: true, opacity: 0.62, toneMapped: false })
+  // El glyph (logo extruido) nace transparente: materializa al llegar la etapa
+  // de IA (penúltima) y brilla pleno en la final — lo maneja updateArchitectureScene
+  const glyphFront = new THREE.MeshBasicMaterial({ color: CYAN, toneMapped: false, transparent: true, opacity: 0 })
+  const glyphSide = new THREE.MeshStandardMaterial({ color: '#071b21', roughness: 0.92, metalness: 0.04, transparent: true, opacity: 0 })
+  const glyphEdges = new THREE.LineBasicMaterial({ color: '#064958', transparent: true, opacity: 0, toneMapped: false })
   disposableMaterials.add(glyphFront).add(glyphSide).add(glyphEdges)
   glyph.materials.push(glyphFront, glyphSide, glyphEdges)
   glyph.frontMaterial = glyphFront
   glyph.sideMaterial = glyphSide
+  glyph.edgeMaterial = glyphEdges
 
   const svgGroup = new THREE.Group()
   svgGroup.rotation.x = Math.PI
