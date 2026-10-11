@@ -214,8 +214,8 @@
                     <!-- Miniatura de la vista inactiva: click = toggle entre vistas -->
                     <div id="mini-viewport" @click="viewMode = viewMode === '3d' ? '2d' : '3d'" title="Cambiar de vista"
                          class="flex-1 min-h-0 overflow-hidden border border-white/10 cursor-pointer hover:border-[#00d4ff]/50 transition-all relative bg-[#0a0d14]">
-                        <!-- 2D Canvas (isométrico, cámara fija) — inicia como miniatura -->
-                        <div id="canvas2d-container" class="w-full h-full">
+                        <!-- Gráfico de arquitectura (Three.js, portado de la web) — inicia como miniatura -->
+                        <div id="canvas2d-container" class="relative w-full h-full">
                             <canvas id="canvas2d" class="w-full h-full cursor-grab active:cursor-grabbing touch-none"></canvas>
                         </div>
                     </div>

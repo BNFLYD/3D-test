@@ -2,7 +2,7 @@ import './style.css'
 import Alpine from 'alpinejs'
 import './js/app.js'
 import { initThree } from './js/scene3d.js'
-import { initCanvasVisualizer } from './js/architecture/canvas-visualizer.js'
+import { initArchitectureVisualizer } from './js/architecture/architecture-visualizer.js'
 
 window.Alpine = Alpine
 Alpine.start()
@@ -43,7 +43,7 @@ window.onload = () => {
     const canvas2dContainer = document.getElementById('canvas2d-container')
     const canvas2d = document.getElementById('canvas2d')
     if (canvas2dContainer && canvas2d) {
-        const api = initCanvasVisualizer({ container: canvas2dContainer, canvas: canvas2d })
+        const api = initArchitectureVisualizer({ container: canvas2dContainer, canvas: canvas2d })
         const appEl = document.querySelector('[x-data]')
         if (appEl && appEl.__x) {
             appEl.__x.$data.canvas2dApi = api

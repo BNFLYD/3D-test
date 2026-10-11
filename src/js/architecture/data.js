@@ -1,105 +1,114 @@
-// HOD System Architecture - Canvas 2D data (traducido al español)
-// Portado de next-test/src/components/architecture/data.js
+// HOD System Architecture — datos del gráfico
+// Copiado de la web canónica: hod-software/src/components/architecture/data.js
+// Coordenadas en espacio de diseño 740×868 (mismas que en la web)
 
-export const NODES = [
-  // INTERACCIÓN — franja inferior del hexágono (z alto = abajo en pantalla)
-  { id: 'web', cat: 'interface', label: 'Web', x: -140, y: -40, z: 190, w: 70, d: 50, h: 10 },
-  { id: 'mobile', cat: 'interface', label: 'Móvil', x: 0, y: 0, z: 200, w: 50, d: 50, h: 10 },
-  { id: 'api', cat: 'interface', label: 'APIs', x: 140, y: -40, z: 190, w: 70, d: 50, h: 10 },
+const TAU = Math.PI * 2
 
-  // APLICACIÓN — franja media inferior
-  { id: 'workflow', cat: 'application', label: 'Motor de Workflows', x: -100, y: 50, z: 100, w: 50, d: 35, h: 14 },
-  { id: 'orchestration', cat: 'application', label: 'Orquestación', x: 0, y: 0, z: 105, w: 55, d: 35, h: 14 },
-  { id: 'integration', cat: 'application', label: 'Integración', x: 100, y: 50, z: 100, w: 50, d: 35, h: 14 },
+function rotatePoint(point, angle) {
+  const cos = Math.cos(angle)
+  const sin = Math.sin(angle)
+  return {
+    x: point.x * cos - point.y * sin,
+    y: point.x * sin + point.y * cos,
+  }
+}
 
-  // DOMINIO — núcleo central (ancla del stack)
-  { id: 'entities', cat: 'domain', label: 'Entidades', x: -60, y: 0, z: 10, w: 60, d: 50, h: 22 },
-  { id: 'rules', cat: 'domain', label: 'Reglas de Negocio', x: 40, y: 0, z: 15, w: 60, d: 50, h: 22 },
-
-  // DATOS — cilindros en la franja superior del hexágono (z bajo = arriba en pantalla)
-  { id: 'database', cat: 'data', label: 'Bases de Datos', x: -90, y: 60, z: -95, r: 26, h: 30 },
-  { id: 'documents', cat: 'data', label: 'Documentos', x: 0, y: 80, z: -105, r: 22, h: 26 },
-  { id: 'cache', cat: 'data', label: 'Caché', x: 90, y: 60, z: -95, r: 22, h: 22 },
-
-  // INFRAESTRUCTURA — bloques a los costados, hacia el ala superior
-  { id: 'compute', cat: 'infrastructure', label: 'Cómputo', x: -160, y: 0, z: -65, w: 60, d: 45, h: 30 },
-  { id: 'network', cat: 'infrastructure', label: 'Redes', x: 160, y: 0, z: -40, w: 60, d: 45, h: 30 },
+// Un trazo angular repetido seis veces forma las piezas entrelazadas del glyph HOD.
+const BASE_GLYPH_PATH = [
+  { x: 0, y: -238 },
+  { x: 0, y: -164 },
+  { x: -68, y: -125 },
+  { x: -68, y: -48 },
+  { x: -4, y: -11 },
+  { x: 48, y: -41 },
 ]
 
-export const CONNECTIONS = [
-  // Interfaces → Aplicación
-  { from: 'web', to: 'orchestration' },
-  { from: 'mobile', to: 'orchestration' },
-  { from: 'api', to: 'integration' },
+export const GLYPH_PARTS = Array.from({ length: 6 }, (_, index) => ({
+  id: `glyph-${index}`,
+  category: index === 0 ? 'interface' : index < 3 ? 'application' : 'infrastructure',
+  path: BASE_GLYPH_PATH.map((point) => rotatePoint(point, index * (TAU / 6))),
+  z: index % 2 === 0 ? 18 : 12,
+  width: 28,
+  height: 18,
+  label: index === 0 ? 'INTERFAZ' : index < 3 ? 'APLICACIÓN' : 'INFRAESTRUCTURA',
+}))
 
-  // Aplicación → Dominio
-  { from: 'workflow', to: 'entities' },
-  { from: 'orchestration', to: 'rules' },
-  { from: 'integration', to: 'entities' },
+export const DATA_CORE = {
+  id: 'data-core',
+  category: 'data',
+  x: 0,
+  y: 0,
+  z: 38,
+  radius: 57,
+  height: 30,
+  label: 'DATOS',
+  items: ['Bases de datos', 'Documentos', 'Registros', 'Conocimiento'],
+}
 
-  // Dominio → Datos
-  { from: 'entities', to: 'database' },
-  { from: 'entities', to: 'documents' },
-  { from: 'rules', to: 'cache' },
-  { from: 'rules', to: 'database' },
+export const DOMAIN_RING = {
+  id: 'domain-ring',
+  category: 'domain',
+  x: 0,
+  y: 0,
+  z: 28,
+  radius: 91,
+  label: 'DOMINIO',
+  items: ['Entidades', 'Reglas', 'Modelo de negocio'],
+}
 
-  // Infraestructura → todas las zonas
-  { from: 'compute', to: 'database' },
-  { from: 'compute', to: 'workflow' },
-  { from: 'network', to: 'api' },
-  { from: 'network', to: 'cache' },
+export const APPLICATION_ANCHORS = [
+  { id: 'workflow', label: 'FLUJOS', x: -106, y: -54, z: 38, target: 'domain-ring' },
+  { id: 'services', label: 'SERVICIOS', x: 106, y: -54, z: 38, target: 'data-core' },
+]
 
-  // Capa transversal
-  { from: 'web', to: 'entities' },
-  { from: 'api', to: 'rules' },
-  { from: 'workflow', to: 'database' },
+export const INTERFACE_ANCHORS = [
+  { id: 'web', label: 'WEB', x: -68, y: -164, z: 58, target: 'workflow' },
+  { id: 'mobile', label: 'MÓVIL', x: 0, y: -238, z: 58, target: 'services' },
+  { id: 'api', label: 'API', x: 68, y: -164, z: 58, target: 'services' },
+]
+
+export const INFRASTRUCTURE_ANCHORS = [
+  { id: 'compute', label: 'CÓMPUTO', x: -112, y: 118, z: 4, target: 'data-core' },
+  { id: 'network', label: 'RED', x: 112, y: 118, z: 4, target: 'data-core' },
+]
+
+export const SYSTEM_CONNECTIONS = [
+  { from: 'data-core', to: 'domain-ring', type: 'internal' },
+  ...APPLICATION_ANCHORS.map((node) => ({ from: node.id, to: node.target, type: 'internal' })),
+  ...INTERFACE_ANCHORS.map((node) => ({ from: node.id, to: node.target, type: 'internal' })),
+  ...INFRASTRUCTURE_ANCHORS.map((node) => ({ from: node.id, to: node.target, type: 'internal' })),
 ]
 
 export const AI_CAPABILITIES = [
-  {
-    id: 'semantic-search',
-    label: 'Búsqueda Semántica',
-    target: 'database',
-    desc: 'RAG y embeddings vectoriales sobre tus datos',
-    x: -90, y: 60, z: -140,
-  },
-  {
-    id: 'assistant',
-    label: 'Asistente',
-    target: 'web',
-    desc: 'Interfaz de IA contextual para usuarios',
-    x: -200, y: -40, z: 130,
-  },
-  {
-    id: 'automation',
-    label: 'Automatización',
-    target: 'workflow',
-    desc: 'Enrutamiento inteligente de procesos y decisiones',
-    x: -160, y: 50, z: 40,
-  },
-  {
-    id: 'document-intel',
-    label: 'Intel. de Documentos',
-    target: 'documents',
-    desc: 'Clasificación, indexación y extracción',
-    x: 50, y: 80, z: -140,
-  },
+  { id: 'assistant', label: 'ASISTENTE IA', x: -275, y: -152, z: 86, target: 'web' },
+  { id: 'automation', label: 'AUTOMATIZACIÓN', x: 270, y: -20, z: 62, target: 'services' },
+  { id: 'semantic-search', label: 'BÚSQUEDA SEMÁNTICA', x: 218, y: 166, z: 32, target: 'data-core' },
+  { id: 'agents', label: 'AGENTES', x: -224, y: 160, z: 48, target: 'domain-ring' },
 ]
 
 export const SECURITY_ENVELOPE = {
-  padding: 35,
-  label: 'Seguridad',
-  sublabel: 'Protección transversal',
-  features: ['Identidad', 'Control de Acceso', 'Cifrado', 'Auditoría', 'Gobierno'],
+  radius: 292,
+  z: 0,
+  height: 124,
+  label: 'SEGURIDAD / TRANSVERSAL',
 }
 
 export const STEPS = [
-  { key: 'overview', eyebrow: 'Arquitectura Primero', title: 'Un sistema,\nno siete capas.' },
-  { key: 'domain', eyebrow: 'Dominio', title: 'Conocimiento de negocio,\ncodificado en estructura.' },
-  { key: 'application', eyebrow: 'Aplicación', title: 'Workflows que\nconectan operaciones.' },
-  { key: 'interface', eyebrow: 'Interfaz', title: 'Cada canal,\nuna sola plataforma.' },
-  { key: 'data', eyebrow: 'Datos', title: 'Información que\npersiste y fluye.' },
-  { key: 'security', eyebrow: 'Seguridad', title: 'Protección envuelta\nalrededor de cada nodo.' },
+  { key: 'overview', eyebrow: 'LÓGICA HOD', title: 'Cómo se conectan\nlas distintas capas.' },
+  { key: 'data', eyebrow: 'Datos', title: 'El sistema\nempieza acá.' },
+  { key: 'domain', eyebrow: 'Dominio', title: 'Conocimiento alrededor\ndel núcleo.' },
+  { key: 'application', eyebrow: 'Aplicación', title: 'Los procesos se vuelven\nestructura.' },
+  { key: 'interface', eyebrow: 'Interfaz', title: 'Todos los canales,\nuna plataforma.' },
+  { key: 'infrastructure', eyebrow: 'Infraestructura', title: 'Un sistema diseñado\npara funcionar.' },
+  { key: 'security', eyebrow: 'Seguridad', title: 'Protección alrededor\nde cada componente.' },
   { key: 'intelligence', eyebrow: 'Inteligencia', title: 'IA cuando\ntiene sentido.' },
-  { key: 'complete', eyebrow: 'HOD en Uno', title: 'Arquitectura primero.\nTecnología después.' },
+  { key: 'complete', eyebrow: 'HOD integrado', title: 'Productos distintos.\nUna misma base.' },
+]
+
+export const INTERNAL_ANCHORS = [
+  DATA_CORE,
+  DOMAIN_RING,
+  ...APPLICATION_ANCHORS,
+  ...INTERFACE_ANCHORS,
+  ...INFRASTRUCTURE_ANCHORS,
 ]
