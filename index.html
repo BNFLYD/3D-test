@@ -157,7 +157,7 @@
     </div>
 
     <!-- UI Overlay Layer -->
-    <div class="relative z-10 flex flex-col justify-between h-screen w-full pointer-events-none p-4 md:p-6">
+    <div class="relative z-10 flex flex-col justify-between h-dvh w-full pointer-events-none p-4 md:p-6">
 
         <!-- Navbar flotante estilo HOD Software -->
         <header class="hod-navbar flex items-center justify-between pointer-events-auto">
@@ -175,20 +175,20 @@
                     <i class="fa-solid fa-video text-[#00d4ff]"></i>
                     <span class="hidden md:inline">Restablecer Vista</span>
                 </button>
-                <button @click="isAutoRotating = !isAutoRotating" :class="['glass-btn p-2 text-[#8a8a8a] w-9 h-9 flex items-center justify-center', isAutoRotating ? 'active' : '']" title="Auto Rotación">
+                <button @click="isAutoRotating = !isAutoRotating" :class="['glass-btn p-2 text-[#8a8a8a] w-10 h-10 md:w-9 md:h-9 flex items-center justify-center', isAutoRotating ? 'active' : '']" title="Auto Rotación">
                     <i class="fa-solid fa-rotate text-[#00d4ff]"></i>
                 </button>
-                <button @click="showInfoModal = true" title="Documentación de Arquitectura" class="glass-btn p-2 text-[#8a8a8a] w-9 h-9 flex items-center justify-center">
+                <button @click="showInfoModal = true" title="Documentación de Arquitectura" class="glass-btn p-2 text-[#8a8a8a] w-10 h-10 md:w-9 md:h-9 flex items-center justify-center">
                     <i class="fa-solid fa-circle-info text-[#00d4ff]"></i>
                 </button>
             </div>
         </header>
 
-        <!-- Center Area: solo drawer de detalle flotando a la derecha -->
-        <div class="flex-1 flex justify-end items-center my-4 pointer-events-none">
+        <!-- Center Area: solo drawer de detalle flotando a la derecha (full-width en mobile) -->
+        <div class="flex-1 flex justify-end items-center my-2 md:my-4 pointer-events-none">
 
             <!-- Right Side: Detail Card con miniatura de la vista alternativa -->
-            <div class="pointer-events-none flex flex-col gap-2 w-[26.4rem] md:w-[31.7rem]">
+            <div class="pointer-events-none flex flex-col gap-2 w-full md:w-[26.4rem] lg:w-[31.7rem]">
 
                 <!-- Header flotante (fuera de la card, sin recuadro) -->
                 <div class="flex items-center justify-center gap-2.5">
@@ -206,7 +206,7 @@
                 </div>
 
                 <!-- Card con miniatura -->
-                <div id="detail-drawer" class="glass-panel p-4 h-[52.65vh] max-h-[72vh] flex flex-col pointer-events-auto">
+                <div id="detail-drawer" class="glass-panel p-3 md:p-4 h-[40vh] md:h-[52.65vh] max-h-[46vh] md:max-h-[72vh] flex flex-col pointer-events-auto">
 
                     <!-- Contenido textual via HTMX (oculto, preservado) -->
                     <div id="drawer-content" class="flex-1 overflow-y-auto" hidden></div>
@@ -224,22 +224,22 @@
         </div>
 
         <!-- Card de descripción de la etapa activa (arriba de la footbar) -->
-        <div class="pointer-events-auto mb-3">
+        <div class="pointer-events-auto mb-2 md:mb-3">
             <div class="glass-panel px-4 py-3.5 flex items-center justify-center min-h-16">
                 <p class="text-sm md:text-[15px] text-[#e4eff1] leading-6 md:leading-7 text-center max-w-[80ch]" x-text="steps.find(s => s.id === currentStep)?.desc"></p>
             </div>
         </div>
 
         <!-- Bottom Floating Controls Bar: prev/next + timeline clickeable -->
-        <footer class="pointer-events-auto glass-panel p-3 px-5">
+        <footer class="pointer-events-auto glass-panel p-2.5 px-4 md:p-3 md:px-5">
             <div class="flex items-center gap-4">
 
                 <!-- Prev / Next -->
                 <div class="flex items-center gap-2">
-                    <button @click="prevStep()" title="Etapa anterior" class="glass-btn w-9 h-9 text-[#8a8a8a] flex items-center justify-center">
+                    <button @click="prevStep()" title="Etapa anterior" class="glass-btn w-10 h-10 md:w-9 md:h-9 text-[#8a8a8a] flex items-center justify-center">
                         <i class="fa-solid fa-chevron-left text-[#00d4ff]"></i>
                     </button>
-                    <button @click="nextStep()" title="Etapa siguiente" class="glass-btn w-9 h-9 text-[#8a8a8a] flex items-center justify-center">
+                    <button @click="nextStep()" title="Etapa siguiente" class="glass-btn w-10 h-10 md:w-9 md:h-9 text-[#8a8a8a] flex items-center justify-center">
                         <i class="fa-solid fa-chevron-right text-[#00d4ff]"></i>
                     </button>
                 </div>
@@ -250,7 +250,7 @@
                         <div class="flex-1 flex items-center">
                             <!-- Nodo de la etapa -->
                             <button @click="setStep(step.id)" :title="step.label"
-                                    class="relative shrink-0 mx-auto w-3 h-3 rounded-full border transition-all duration-300"
+                                    class="relative shrink-0 mx-auto w-3 h-3 rounded-full border transition-all duration-300 before:absolute before:-inset-3.5 before:content-['']"
                                     :class="[
                                         currentStep === step.id
                                             ? 'bg-[#00d4ff] border-[#65e8ff] shadow-[0_0_12px_2px_rgba(0,212,255,0.5)] scale-125'
@@ -272,7 +272,7 @@
 
     <!-- Info Modal -->
     <div x-show="showInfoModal" x-transition.opacity class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4" @click.self="showInfoModal = false" style="display: none;">
-        <div class="glass-panel p-6 max-w-2xl w-full border border-[#00d4ff]/30 flex flex-col gap-4 max-h-[85vh] overflow-y-auto">
+        <div class="glass-panel p-4 md:p-6 max-w-2xl w-full border border-[#00d4ff]/30 flex flex-col gap-4 max-h-[85vh] overflow-y-auto">
             <div class="flex items-center justify-between pb-3 border-b border-white/10">
                 <h2 class="hod-brand text-base flex items-center gap-2">
                     <i class="fa-solid fa-sitemap text-[#00d4ff]"></i> HOD System Architecture Specification
