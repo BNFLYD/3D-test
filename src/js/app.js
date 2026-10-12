@@ -17,6 +17,9 @@ export default function architectureApp() {
         showFlow: true,
         drawerOpen: false,
         viewMode: '3d',
+        // Vista secundaria (drawer con mini-viewport): visible por defecto solo en desktop,
+        // en mobile se trae con el toggle de la navbar
+        showMiniView: window.innerWidth >= 768,
         canvas2dApi: null,
 
         steps: [

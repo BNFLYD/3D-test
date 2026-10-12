@@ -85,6 +85,11 @@
             color: #f2f2f2;
         }
 
+        /* En pantallas muy chicas la navbar necesita ganar espacio para el toggle extra */
+        @media (max-width: 400px) {
+            .hod-brand { font-size: 10px; letter-spacing: 0.06em; }
+        }
+
         .hod-eyebrow {
             font-family: 'Monaspace Argon', monospace;
             text-transform: uppercase;
@@ -178,6 +183,9 @@
                 <button @click="isAutoRotating = !isAutoRotating" :class="['glass-btn p-2 text-[#8a8a8a] w-10 h-10 md:w-9 md:h-9 flex items-center justify-center', isAutoRotating ? 'active' : '']" title="Auto Rotación">
                     <i class="fa-solid fa-rotate text-[#00d4ff]"></i>
                 </button>
+                <button @click="showMiniView = !showMiniView" :class="['glass-btn p-2 text-[#8a8a8a] w-10 h-10 md:w-9 md:h-9 flex items-center justify-center', showMiniView ? 'active' : '']" :title="showMiniView ? 'Ocultar vista secundaria' : 'Mostrar vista secundaria'">
+                    <i :class="showMiniView ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'" class="text-[#00d4ff]"></i>
+                </button>
                 <button @click="showInfoModal = true" title="Documentación de Arquitectura" class="glass-btn p-2 text-[#8a8a8a] w-10 h-10 md:w-9 md:h-9 flex items-center justify-center">
                     <i class="fa-solid fa-circle-info text-[#00d4ff]"></i>
                 </button>
@@ -187,8 +195,15 @@
         <!-- Center Area: solo drawer de detalle flotando a la derecha (full-width en mobile) -->
         <div class="flex-1 flex justify-end items-center my-2 md:my-4 pointer-events-none">
 
-            <!-- Right Side: Detail Card con miniatura de la vista alternativa -->
-            <div class="pointer-events-none flex flex-col gap-2 w-full md:w-[26.4rem] lg:w-[31.7rem]">
+            <!-- Right Side: Detail Card con miniatura de la vista alternativa (toggle desde navbar) -->
+            <div class="pointer-events-none flex flex-col gap-2 w-full md:w-[26.4rem] lg:w-[31.7rem]"
+                 x-show="showMiniView"
+                 x-transition:enter="transition duration-300 ease-out"
+                 x-transition:enter-start="opacity-0 translate-x-4"
+                 x-transition:enter-end="opacity-100 translate-x-0"
+                 x-transition:leave="transition duration-200 ease-in"
+                 x-transition:leave-start="opacity-100 translate-x-0"
+                 x-transition:leave-end="opacity-0 translate-x-4">
 
                 <!-- Header flotante (fuera de la card, sin recuadro) -->
                 <div class="flex items-center justify-center gap-2.5">
